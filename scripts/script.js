@@ -2,7 +2,6 @@
 
 window.addEventListener(`load`,initPage)
 
-initContent()
 function initPage() {
     document.querySelectorAll(`#registerForm, #contentContainer`).forEach(hide => hide.classList.add(`d-none`));
     document.querySelector(`#registerForm button`).addEventListener(`click`, validateRegistration);
