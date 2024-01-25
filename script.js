@@ -34,12 +34,13 @@ function validateLogin(regName, regPassInput) {
     let userRegObject = users.filter(object => object.username === regName);
     let checkedRegName = users.some(user => user.username === regName);
     
-try {   // Kan skriva skippa === true och bara skriva: if (checkedName || checkedRegName) då "some" metoden returnerar true/false. Vill man kolla efter false så !checkedName
+try {   // Kan skippa att skriva: "=== true" och bara skriva: "if (checkedName || checkedRegName)" då "some" metoden returnerar true/false. 
+        // Vill man kolla efter false så !checkedName. 
     if (checkedName === true || checkedRegName === true){
         
         let passwordInput = document.querySelector(`#password`).value;
 
-        // Då passwordInput och regPassInput ligger i olika formulär kommer en alltid vara tom så man måste göra en check annars error.
+        // Då passwordInput och regPassInput ligger i olika formulär kommer ett formulär alltid vara tomt så man måste göra en check annars error.
         if (passwordInput !== ``) {
             // Kollar lösenordet på plats 0 i arrayen userObject för att se ifall det matchar variabeln passwordInput
             if (passwordInput === userObject[0].password) {

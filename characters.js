@@ -1,6 +1,6 @@
 let characters = [
     {
-        Name : 'Super Mario',
+        Name : 'Mario',
         Age : '43',
         Occupation : 'Plumber',
         Image : 'https://upload.wikimedia.org/wikipedia/en/a/a9/MarioNSMBUDeluxe.png',
@@ -65,8 +65,8 @@ let characters = [
     },
     {
         Name : 'Waluigi',
-        Age : '24',
-        Occupation : 'Mushroom Retainer',
+        Age : '40',
+        Occupation : 'Mischief Maker',
         Image : 'https://upload.wikimedia.org/wikipedia/en/4/46/Waluigi.png',
         Description : 'Waluigi is Luigi\'s lanky, purple-clad rival. He is known for his mischievous nature and often teams up with Wario to cause trouble. Despite not having a game of his own, he is a regular competitor in various Mario spin-off games.',
         Color: `rgb(146 88 228)`
