@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 * {
     margin: 0;
     padding: 0;
@@ -41,6 +42,7 @@ form button {
     justify-self: end;
     border: 1px solid #444;
     background-color: #f6f7f2;
+    transition: all .15s ease-in-out;
 
 }
 
@@ -62,12 +64,10 @@ form button {
     background-color: #f3f3f2;
     border: 1px solid #444;
     border-radius: 1rem;
-    transition: all .2s ease-in-out; 
+    transition: all .2s ease-in-out;
 }
 .card:hover {
     scale: 1.03;
-    box-shadow: 4px 4px 7px #e87ddd ;
-    
 }
 .card-photo {
     justify-self: center;
@@ -77,23 +77,37 @@ form button {
     width: 170px;
     border-radius: 50%;
     background-color: #ebe7e2;
-    box-shadow: inset 1px 1px 10px rgb(140, 141, 128);
+    box-shadow: inset 4px 4px 10px rgb(140, 141, 128);
+
 }
 .caption-container{
     display: grid;
     grid-template-columns: 1fr 1fr;
+    padding: 4rem 0;
+}
 
+.card-header {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-family: 'Press Start 2P';
+    grid-area: auto / auto / 1 / span 2;
+    display: inline-block;
 }
 
 .card-occupation{
-    grid-column: span 2;
+    font-style: italic;
+
 }
 .card-age {
+    grid-area: auto / auto / 2 / 3;
+    font-style: italic;
     justify-self: center;
+
 }
 .card-description {
     grid-column: span 2;
     margin-top: 1rem;
-    max-height: 230px;
+    height: 150px;
     overflow: hidden;
+    line-height: 1.5;
 }

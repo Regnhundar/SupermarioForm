@@ -2,7 +2,7 @@
 
 window.addEventListener(`load`,initPage)
 
-
+initContent()
 function initPage() {
     document.querySelectorAll(`#registerForm, #contentContainer`).forEach(hide => hide.classList.add(`d-none`));
     document.querySelector(`#registerForm button`).addEventListener(`click`, validateRegistration);
@@ -34,7 +34,7 @@ function validateLogin(regName, regPassInput) {
     let userRegObject = users.filter(object => object.username === regName);
     let checkedRegName = users.some(user => user.username === regName);
     
-try {   // Kan skriva enbart if (checkedName || checkedRegName) då "some" metoden returnerar true/false. Vill man kolla efter false så !checkedName
+try {   // Kan skriva skippa === true och bara skriva: if (checkedName || checkedRegName) då "some" metoden returnerar true/false. Vill man kolla efter false så !checkedName
     if (checkedName === true || checkedRegName === true){
         
         let passwordInput = document.querySelector(`#password`).value;
@@ -125,26 +125,38 @@ function initContent() {
         imgRef.classList.add(`card-photo`);
         imgRef.src = characters[i].Image;
         imgRef.alt = `Bild på ${characters[i].Name}`
+        // Fungerar på samma vis som css :hover men vi baserar bakgrundsfärgen på färgen som står i objektet under Color.
+        cardContainerRef.addEventListener('mouseenter', function () {
+            cardContainerRef.style.boxShadow = `2px 2px 20px ${characters[i].Color}`;
+          });
+        // Värdet sätts när musen pekar på kortet och stannar kvar efter musen lämnar om man inte rensar det med ny eventlistener.
+          cardContainerRef.addEventListener('mouseleave', function () {
+            cardContainerRef.style.boxShadow = ``;
+          });
+          
         cardContainerRef.appendChild(imgRef);
         
         let captionRef = document.createElement(`figcaption`);
         captionRef.classList.add(`caption-container`);
         cardContainerRef.appendChild(captionRef);
 
+
         let cardName = document.createElement(`h3`);
         cardName.classList.add(`card-header`);
+        // Sätter en textskugga på kortets header och sätter den till den färg som är i objektet under Color.
+        cardName.style.textShadow = `2px 1px 0px ${characters[i].Color}`;
         captionRef.appendChild(cardName);
         cardName.textContent = characters[i].Name;
 
         let cardAge = document.createElement(`p`);
         cardAge.classList.add(`card-age`);
         captionRef.appendChild(cardAge);
-        cardAge.textContent = `Age: ${characters[i].Age}`;
+        cardAge.textContent = `${characters[i].Age} years old`;
 
         let cardOccupation = document.createElement(`p`);
         cardOccupation.classList.add(`card-occupation`);
         captionRef.appendChild(cardOccupation);
-        cardOccupation.textContent = `Occupation: ${characters[i].Occupation}`;
+        cardOccupation.textContent = characters[i].Occupation;
 
         let cardDescription = document.createElement(`p`);
         cardDescription.classList.add(`card-description`);
@@ -158,7 +170,7 @@ function logOut() {
     // Om man bara lägger till klassen d-none för att dölja logout-knappen vi skapat så skapar vi en ny varje gång vi loggar in och ut.
     document.querySelector(`.logout-button`).remove();
     document.querySelector(`#loginForm`).classList.remove(`d-none`);
-    // Då querySelectorAll returnerar en nonde vilket är ungefär som en array så behöver vi loopa igenom varje input i .form-container
+    // Då querySelectorAll returnerar en node vilket är ungefär som en array så behöver vi loopa igenom varje input i .form-container
     // för att rensa vad de har som value. Dvs användarnamn och password.
     document.querySelectorAll('.form-container input').forEach(input => {
         input.value = '';
