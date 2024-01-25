@@ -4,6 +4,11 @@
     box-sizing: 0;
 }
 
+body {
+    background-color: #ebe7e2;
+    color: #333;
+}
+
 .d-none {
     display: none;
 }
@@ -25,4 +30,70 @@ form button {
     width: 49.5%;
     padding: 1rem;
 }
+.form-container {
+    display: grid;
+}
 
+.logout-button {
+    padding: 1rem;
+    margin: 2rem;
+    border-radius: 8px;
+    justify-self: end;
+    border: 1px solid #444;
+    background-color: #f6f7f2;
+
+}
+
+.logout-button:hover {
+    cursor: pointer;
+    scale: 1.05;
+}
+.content-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    max-width: 1200px;
+    margin: 1rem auto;
+}
+
+.card{
+    display: grid;
+    padding: 1.5rem;
+    background-color: #f3f3f2;
+    border: 1px solid #444;
+    border-radius: 1rem;
+    transition: all .2s ease-in-out; 
+}
+.card:hover {
+    scale: 1.03;
+    box-shadow: 4px 4px 7px #e87ddd ;
+    
+}
+.card-photo {
+    justify-self: center;
+    object-fit: none;
+    object-position: top;
+    height: 170px;
+    width: 170px;
+    border-radius: 50%;
+    background-color: #ebe7e2;
+    box-shadow: inset 1px 1px 10px rgb(140, 141, 128);
+}
+.caption-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+}
+
+.card-occupation{
+    grid-column: span 2;
+}
+.card-age {
+    justify-self: center;
+}
+.card-description {
+    grid-column: span 2;
+    margin-top: 1rem;
+    max-height: 230px;
+    overflow: hidden;
+}

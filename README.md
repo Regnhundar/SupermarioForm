@@ -3,12 +3,12 @@ Detta är en övning där era kunskaper kring formulärvalidering, DOM-manipulat
 
 ## Instruktioner
 Ni skall: 
-* Läsa in alla javascript.filer till er index.html.
-* Gömma #registerForm och #contentContainer.
-* Lägga till lyssnare på knapparna i formuläret och agera utifrån användarens knapptryck.
-* Utföra formulärvalidering på två separata formulär, ett för att loogga in, och ett för att registrera en ny användare.
-* För att registrera sig behöver användaren:
-  * Ange ett användarnamn som är minst 6 tecken långt.
+* Läsa in alla javascript.filer till er index.html. 
+* Gömma #registerForm och #contentContainer. 
+* Lägga till lyssnare på knapparna i formuläret och agera utifrån användarens knapptryck. 
+* Utföra formulärvalidering på två separata formulär, ett för att loogga in, och ett för att registrera en ny användare. 
+* För att registrera sig behöver användaren: 
+  * Ange ett användarnamn som är minst 6 tecken långt. 
   * Ange ett lösenord som är minst 8 tecken långt (bonusuppgift: lösenordet skall både innehålla stora och små bokstäver, samt minst en siffra).
   * Ange samma lösenord två gånger.
 * När inloggning lyckats får ni fritt spelrum med vad ni vill göra med er #contentContainer, förslag:
