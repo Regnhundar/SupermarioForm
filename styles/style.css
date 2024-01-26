@@ -98,30 +98,44 @@ form button {
     box-shadow: inset 4px 4px 10px rgb(140, 141, 128);
 }
 
-.caption-container{
+.caption-container-big {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: 50px 30px 100px;
     padding: 4rem 0;
 }
 
+.caption-container-small {
+    display:flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height:  90px;
+    padding: 1.5rem 0;
+}
+
 .card-header {
-    margin-bottom: 1rem;
     font-size: 1.2rem;
     font-family: 'Press Start 2P';
     grid-area: auto / auto / 1 / span 2;
-    display: inline-block;
 }
 
 .card-occupation{
     font-style: italic;
+    align-self: center;
 }
 
 .card-age {
     grid-area: auto / auto / 2 / 3;
     font-style: italic;
     justify-self: center;
-
+    align-self: center;
 }
+
+/* .card-age-small {
+    align-self: start;
+    padding-bottom: 1rem;
+} */
+
 .card-description {
     grid-column: span 2;
     margin-top: 1rem;

@@ -63,7 +63,8 @@ try {   // Kan skippa att skriva: "=== true" och bara skriva: "if (checkedName |
         let passwordInput = document.querySelector(`#password`);
 
         // Då passwordInput och regPassInput ligger i olika formulär kommer ett formulär alltid vara tomt så man måste göra en check annars error.
-        if (passwordInput.value !== ``) {
+        // Om regPassInput är tomt så är det undefined.
+        if (passwordInput.value !== `` || passwordInput.value  === `` && regPassInput === undefined) {
 
             // Kollar lösenordet på plats 0 i arrayen userObject för att se ifall det matchar variabeln passwordInput
             if (passwordInput.value === userObject[0].password) {
@@ -76,7 +77,7 @@ try {   // Kan skippa att skriva: "=== true" och bara skriva: "if (checkedName |
                 }
             }
         }
-        else if (regPassInput !== ``){
+        else if (regPassInput !== undefined){
             if (regPassInput === userRegObject[0].password) {
                 initContent();
             }
@@ -156,28 +157,29 @@ function initContent() {
     document.querySelector(`.logout-button`).classList.remove(`d-none`);
     document.querySelector(`.back-button`).classList.add(`d-none`);
 
-    renderCards (1)
+    renderCards (`bigCard`, characters)
 }
 
+function renderCards (cardSize, whatArray) {
 
-
-function renderCards (whatever) {
     let mainContainerRef = document.querySelector(`#contentContainer`);
 
-
-    for (let i = 0; i < characters.length; i++){
+    for (let i = 0; i < whatArray.length; i++){
 
         let cardContainerRef = document.createElement(`figure`);
         cardContainerRef.classList.add(`card`);
+        if ( cardSize === `smallCard`) {
+            cardContainerRef.addEventListener(`click`, executeMove);
+        }
         mainContainerRef.appendChild(cardContainerRef);
 
         let imgRef = document.createElement(`img`);
         imgRef.classList.add(`card-photo`);
-        imgRef.src = characters[i].Image;
-        imgRef.alt = `Bild på ${characters[i].Name}`
+        imgRef.src = whatArray[i].Image;
+        imgRef.alt = `Bild på ${whatArray[i].Name}`
         // Fungerar på samma vis som css :hover men vi baserar bakgrundsfärgen på färgen som står i objektet under Color.
         cardContainerRef.addEventListener('mouseenter', function () {
-            cardContainerRef.style.boxShadow = `2px 2px 20px ${characters[i].Color}`;
+            cardContainerRef.style.boxShadow = `2px 2px 20px ${whatArray[i].Color}`;
           });
         // Värdet sätts när musen pekar på kortet och stannar kvar efter musen lämnar om man inte rensar det med ny eventlistener.
           cardContainerRef.addEventListener('mouseleave', function () {
@@ -187,36 +189,40 @@ function renderCards (whatever) {
         cardContainerRef.appendChild(imgRef);
         
         let captionRef = document.createElement(`figcaption`);
-        captionRef.classList.add(`caption-container`);
+        if(cardSize === `bigCard`) {
+            captionRef.classList.add(`caption-container-big`);
+        }
+        else if (cardSize === `smallCard`) {
+            captionRef.classList.add(`caption-container-small`);
+        }
         cardContainerRef.appendChild(captionRef);
 
         let cardName = document.createElement(`h3`);
         cardName.classList.add(`card-header`);
         // Sätter en textskugga på kortets header och sätter den till den färg som är i objektet under Color.
-        cardName.style.textShadow = `2px 1px 0px ${characters[i].Color}`;
+        cardName.style.textShadow = `2px 1px 0px ${whatArray[i].Color}`;
         captionRef.appendChild(cardName);
-        cardName.textContent = characters[i].Name;
+        cardName.textContent = whatArray[i].Name;
 
-        let cardAge = document.createElement(`p`);
-        cardAge.classList.add(`card-age`);
-        captionRef.appendChild(cardAge);
-        cardAge.textContent = `${characters[i].Age} years old`;
+        if(cardSize === `bigCard`) {
+            let cardAge = document.createElement(`p`);
+            cardAge.classList.add(`card-age`);
+            captionRef.appendChild(cardAge);
+            cardAge.textContent = `${whatArray[i].Age} years old`;
+        }
 
         let cardOccupation = document.createElement(`p`);
         cardOccupation.classList.add(`card-occupation`);
         captionRef.appendChild(cardOccupation);
-        cardOccupation.textContent = characters[i].Occupation;
-    if(whatever === 1) {
-        let cardDescription = document.createElement(`p`);
-        cardDescription.classList.add(`card-description`);
-        captionRef.appendChild(cardDescription);
-        cardDescription.textContent = characters[i].Description;
-    }
-}
-}
+        cardOccupation.textContent = whatArray[i].Occupation;
 
-function backButton () {
-
+        if(cardSize === `bigCard`) {
+            let cardDescription = document.createElement(`p`);
+            cardDescription.classList.add(`card-description`);
+            captionRef.appendChild(cardDescription);
+            cardDescription.textContent = whatArray[i].Description;
+        }
+}
 }
 
 function logOut() {
