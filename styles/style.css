@@ -1,17 +1,19 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Press+Start+2P&display=swap');
 * {
     margin: 0;
     padding: 0;
-    box-sizing: 0;
+}
+
+::-webkit-scrollbar {
+    width: 0; /* Change the width as needed */
 }
 
 body {
+    margin: 0 auto;
     background-color: #ebe7e2;
     color: #333;
-}
-
-.d-none {
-    display: none;
+    max-width: 1300px;
+    font-family: 'Josefin Sans';
 }
 
 form {
@@ -32,27 +34,41 @@ form button {
     padding: 1rem;
 }
 .form-container {
-    display: grid;
+    display: flex;
+    justify-content: space-between;
 }
 
-.logout-button {
+.logout-button,
+.memory-button,
+.back-button {
     padding: 1rem;
     margin: 2rem;
     border-radius: 8px;
-    justify-self: end;
+
     border: 1px solid #444;
     background-color: #f6f7f2;
     transition: all .15s ease-in-out;
-
 }
 
-.logout-button:hover {
+.logout-button:hover,
+.memory-button:hover,
+.back-button:hover {
     cursor: pointer;
     scale: 1.05;
 }
+
+
 .content-container{
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+    max-width: 1200px;
+    margin: 1rem auto;
+}
+
+.memory-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
     max-width: 1200px;
     margin: 1rem auto;
@@ -66,20 +82,22 @@ form button {
     border-radius: 1rem;
     transition: all .2s ease-in-out;
 }
+
 .card:hover {
     scale: 1.03;
 }
+
 .card-photo {
     justify-self: center;
-    object-fit: none;
+    object-fit: cover;
     object-position: top;
     height: 170px;
     width: 170px;
     border-radius: 50%;
     background-color: #ebe7e2;
     box-shadow: inset 4px 4px 10px rgb(140, 141, 128);
-
 }
+
 .caption-container{
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -96,8 +114,8 @@ form button {
 
 .card-occupation{
     font-style: italic;
-
 }
+
 .card-age {
     grid-area: auto / auto / 2 / 3;
     font-style: italic;
@@ -110,4 +128,8 @@ form button {
     height: 150px;
     overflow: hidden;
     line-height: 1.5;
+}
+
+.d-none {
+    display: none;
 }

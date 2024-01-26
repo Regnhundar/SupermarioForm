@@ -70,6 +70,22 @@ let characters = [
         Image : 'https://upload.wikimedia.org/wikipedia/en/4/46/Waluigi.png',
         Description : 'Waluigi is Luigi\'s lanky, purple-clad rival. He is known for his mischievous nature and often teams up with Wario to cause trouble. Despite not having a game of his own, he is a regular competitor in various Mario spin-off games.',
         Color: `rgb(146 88 228)`
+    },
+    // {
+    //     Name : 'Shyguy',
+    //     Age : '??',
+    //     Occupation : 'Minion',
+    //     Image : 'https://mario.wiki.gallery/images/b/b2/MPS_Shy_Guy_Artwork.png',
+    //     Description : 'Shy Guys are a common enemy type in the Mario series. They are characterized by their mask-like faces and shy behavior. Shy Guys come in various colors and often serve as minions for the main antagonist. Despite their timid appearance, they can be mischievous and participate in various activities.',
+    //     Color: `#f32a2a`
+    // },
+    {
+        Name : 'Princess Daisy',
+        Age : '23',
+        Occupation : 'Ruler of Sarasaland',
+        Image : 'https://mario.wiki.gallery/images/1/15/SMBW_Daisy.png',
+        Description : 'Princess Daisy is the princess of Sarasaland and a recurring character in the Mario series. She is known for her cheerful and energetic personality. Daisy is often a friend and ally to Princess Peach and has appeared in various Mario spin-off games.',
+        Color: `#fedb37`
     }
     
 ];

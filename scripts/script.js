@@ -3,8 +3,29 @@
 window.addEventListener(`load`,initPage)
 
 function initPage() {
-    document.querySelectorAll(`#registerForm, #contentContainer`).forEach(hide => hide.classList.add(`d-none`));
+    document.querySelector(`#registerForm`).classList.add(`d-none`);
     document.querySelector(`#registerForm button`).addEventListener(`click`, validateRegistration);
+
+    let backButtonRef = document.createElement(`button`);
+    backButtonRef.textContent = `Tillbaka`;
+    backButtonRef.addEventListener(`click`, () => {
+        document.querySelector(`#contentContainer`).innerHTML = ``;
+        initContent(1);
+    });
+    backButtonRef.classList.add(`back-button`, `d-none`);
+    document.querySelector(`.form-container`).prepend(backButtonRef);
+
+    let memoryButtonRef = document.createElement(`button`);
+    memoryButtonRef.textContent = `Memory`;
+    memoryButtonRef.addEventListener(`click`, memoryGame);
+    memoryButtonRef.classList.add(`memory-button`, `d-none`);
+    document.querySelector(`.form-container`).appendChild(memoryButtonRef);
+
+    let logoutButtonRef = document.createElement(`button`);
+    logoutButtonRef.textContent = `Logga ut`;
+    logoutButtonRef.addEventListener(`click`, logOut);
+    logoutButtonRef.classList.add(`logout-button`, `d-none`);
+    document.querySelector(`.form-container`).appendChild(logoutButtonRef);
 
     // Gör en forEach loop på alla knappar i #loginForm. Beroende på knappens textContent läggs en av lyssnarna på knappen.
     document.querySelectorAll(`#loginForm button`).forEach(addClick =>{
@@ -21,99 +42,128 @@ function initPage() {
 
         }
     })
+    initContent()
 }
+
 
 function validateLogin(regName, regPassInput) {
 
     event.preventDefault();
-    let logInName = document.querySelector(`#username`).value;
-    let userObject = users.filter(object => object.username === logInName); // Filter-funktionen tar ut objektet vars användarnamn matchar variabeln logInName
-    let checkedName = users.some(user => user.username === logInName); // returnerar true/false ifall arrayen har ett username som är variabeln logInName
+    let logInName = document.querySelector(`#username`);
+    let userObject = users.filter(object => object.username === logInName.value); // Filter-funktionen tar ut objektet vars användarnamn matchar variabeln logInName
+    let checkedName = users.some(user => user.username === logInName.value); // returnerar true/false ifall arrayen har ett username som är variabeln logInName
     
     let userRegObject = users.filter(object => object.username === regName);
     let checkedRegName = users.some(user => user.username === regName);
     
 try {   // Kan skippa att skriva: "=== true" och bara skriva: "if (checkedName || checkedRegName)" då "some" metoden returnerar true/false. 
         // Vill man kolla efter false så !checkedName. 
-    if (checkedName === true || checkedRegName === true){
-        
-        let passwordInput = document.querySelector(`#password`).value;
+    if (checkedName === true || checkedRegName === true) {
+
+        let passwordInput = document.querySelector(`#password`);
 
         // Då passwordInput och regPassInput ligger i olika formulär kommer ett formulär alltid vara tomt så man måste göra en check annars error.
-        if (passwordInput !== ``) {
+        if (passwordInput.value !== ``) {
+
             // Kollar lösenordet på plats 0 i arrayen userObject för att se ifall det matchar variabeln passwordInput
-            if (passwordInput === userObject[0].password) {
+            if (passwordInput.value === userObject[0].password) {
             initContent();
             }
             else {
-                document.querySelector(`#errorMsg`).textContent = `Fel lösenord!`;
+                throw {
+                    nodeRef : passwordInput,
+                    msg : `Fel lösenord!`
+                }
             }
         }
         else if (regPassInput !== ``){
             if (regPassInput === userRegObject[0].password) {
                 initContent();
             }
-            else {
-                document.querySelector(`#errorMsg`).textContent = `Fel lösenord!`;
-            }
         }
     }
     else {
-        document.querySelector(`#errorMsg`).textContent = `Det finns ingen användare med namnet: ${logInName}!`
+        throw {
+            nodeRef : logInName,
+            msg : `Det finns ingen användare med namnet: ${logInName.value}!`
+        }
     }
 } catch (error) {
     console.log(error);   
+    document.querySelector(`#errorMsg`).textContent = error.msg;
+    error.nodeRef.focus();
+
 }}
 
 function validateRegistration() {
     event.preventDefault();
-    let logInName = document.querySelector(`#uName`).value
-    let checkedName = users.some(user => user.username === logInName);
-    let suggestedPassword = document.querySelector(`#pWord`).value
-    let suggestedPasswordAgain = document.querySelector(`#pWordAgain`).value
+    
+    let logInName = document.querySelector(`#uName`);
+    let checkedName = users.some(user => user.username === logInName.value);
+    let suggestedPassword = document.querySelector(`#pWord`)
+    let suggestedPasswordAgain = document.querySelector(`#pWordAgain`)
 
     try {
         if (checkedName === true) {
-        document.querySelector(`#errorMsg`).textContent = `Tyvärr användarnamnet existerar redan. Prova ${logInName}123!`
+            throw {
+        nodeRef : logInName, 
+        msg : `Tyvärr användarnamnet existerar redan. Prova ${logInName.value}123!`
+            }
         }
-        else if (logInName.length < 6) {
-        document.querySelector(`#errorMsg`).textContent = `${logInName} har för få tecken. Du måste ange minst 6st tecken.`
+        else if (logInName.value.length < 6) {
+            throw {
+                nodeRef : logInName, 
+                msg : `${logInName.value} har för få tecken. Du måste ange minst 6st tecken.`
+            }
         }
         else {
-            if (suggestedPassword.length < 8) {
-                document.querySelector(`#errorMsg`).textContent = `Du har valt ett för kort lösenord!`
+            if (suggestedPassword.value.length < 8) {
+                throw {
+                    nodeRef : suggestedPassword, 
+                    msg : `Du har valt ett för kort lösenord!`
+                }
             }
-            else if (suggestedPassword !== suggestedPasswordAgain) {
-                document.querySelector(`#errorMsg`).textContent = `Dina lösenord matchar inte!`
-
+            else if (suggestedPassword.value !== suggestedPasswordAgain.value) {
+                throw {
+                    nodeRef : suggestedPasswordAgain, 
+                    msg : `Dina lösenord matchar inte!`
+                }
             }
             else {
-                let accountInfo = { username: logInName, password: suggestedPassword };
+                let accountInfo = { username: logInName.value, password: suggestedPassword.value };
                 users.push(accountInfo);
-                validateLogin(logInName, suggestedPassword); // Tas emot i validateLogin som (regName, regPassInput).        
-            }
+                validateLogin(logInName.value, suggestedPassword.value); // Tas emot i validateLogin som (regName, regPassInput).        
             }
         }
+        }
     catch (error) {
-        console.log(error);
+        document.querySelector(`#errorMsg`).textContent = error.msg;
+        error.nodeRef.focus();
+        error.nodeRef.value = ``
         }
 }
 
 function initContent() {
     console.log(`initContent()`);
-
+    let errorMsg = document.querySelector(`#errorMsg`);
+    errorMsg.textContent = ``;
+    errorMsg.classList.add(`d-none`);
+    document.querySelector(`#contentContainer`).classList.add(`content-container`);
+    document.querySelector(`#contentContainer`).classList.remove(`memory-container`);
     document.querySelector(`#loginForm`).classList.add(`d-none`);
     document.querySelector(`#registerForm`).classList.add(`d-none`);
-    document.querySelector(`#contentContainer`).classList.remove(`d-none`);
-    document.querySelector(`#errorMsg`).textContent = ``;
+    document.querySelector(`.memory-button`).classList.remove(`d-none`);
+    document.querySelector(`.logout-button`).classList.remove(`d-none`);
+    document.querySelector(`.back-button`).classList.add(`d-none`);
 
-    let logOutRef = document.createElement(`button`)
-    logOutRef.textContent = `Logga ut`;
-    logOutRef.addEventListener(`click`, logOut);
-    logOutRef.classList.add(`logout-button`);
-    document.querySelector(`.form-container`).appendChild(logOutRef);
+    renderCards (1)
+}
 
+
+
+function renderCards (whatever) {
     let mainContainerRef = document.querySelector(`#contentContainer`);
+
 
     for (let i = 0; i < characters.length; i++){
 
@@ -140,7 +190,6 @@ function initContent() {
         captionRef.classList.add(`caption-container`);
         cardContainerRef.appendChild(captionRef);
 
-
         let cardName = document.createElement(`h3`);
         cardName.classList.add(`card-header`);
         // Sätter en textskugga på kortets header och sätter den till den färg som är i objektet under Color.
@@ -157,18 +206,26 @@ function initContent() {
         cardOccupation.classList.add(`card-occupation`);
         captionRef.appendChild(cardOccupation);
         cardOccupation.textContent = characters[i].Occupation;
-
+    if(whatever === 1) {
         let cardDescription = document.createElement(`p`);
         cardDescription.classList.add(`card-description`);
         captionRef.appendChild(cardDescription);
         cardDescription.textContent = characters[i].Description;
+    }
 }
 }
 
+function backButton () {
+
+}
+
 function logOut() {
+    document.querySelector(`#errorMsg`).classList.remove(`d-none`);
     document.querySelector(`#contentContainer`).innerHTML = ``
     // Om man bara lägger till klassen d-none för att dölja logout-knappen vi skapat så skapar vi en ny varje gång vi loggar in och ut.
-    document.querySelector(`.logout-button`).remove();
+    document.querySelector(`.logout-button`).classList.add(`d-none`);
+    document.querySelector(`.memory-button`).classList.add(`d-none`);
+    document.querySelector(`.back-button`).classList.add(`d-none`);
     document.querySelector(`#loginForm`).classList.remove(`d-none`);
     // Då querySelectorAll returnerar en node vilket är ungefär som en array så behöver vi loopa igenom varje input i .form-container
     // för att rensa vad de har som value. Dvs användarnamn och password.
