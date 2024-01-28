@@ -7,6 +7,7 @@ function memoryGame () {
     gameBoard.innerHTML = ``
     gameBoard.classList.remove(`content-container`);
     gameBoard.classList.add(`memory-container`)
+
     // Visar tillbakaknappen och döljer knappen för memory.
     document.querySelector(`.back-button`).classList.remove(`d-none`);
     document.querySelector(`.memory-button`).classList.add(`d-none`);
@@ -19,6 +20,8 @@ function memoryGame () {
     
     let memoryArray = [];
     // För att blanda loopar vi igenom vår konkatenerade array. Så länge den innehåller ett kort fortsätter loopen.
+    // Försökte först med en for loop men då varje varv förminskar combinedCharacters.length med 1 så behövde jag bestämma
+    // exakt hur många varv som skulle loopas vilket inte blir skalbart.
      while(combinedCharacters.length > 0) {
 
          let randomNumber = Math.floor(Math.random() * combinedCharacters.length);
@@ -32,7 +35,7 @@ function memoryGame () {
      for (let i = 0; i < memoryArray.length; i++) {
         oGameData.gameField.push(memoryArray[i].Name)
      }
-     console.log(...oGameData.gameField);
+
  
         renderCards(`smallCard`, memoryArray)
     
@@ -45,17 +48,87 @@ let oGameData = {};
 
 function initGlobalObject () {
 
-    oGameData.playerTurn = 0;
+    oGameData.playerMove = 1; // Vilket kort man ska visa.
 
-    oGameData.seconds = 15;
+    oGameData.playerTurn = 0; // Hur många drag man gjort.
 
-    oGameData.playerScore = 0;
-    
+    oGameData.turnSeconds = 15; // Hur lång tid man har på sig att göra ett drag.
+
+    oGameData.totalSeconds = 0; // Summerar hur många sekunder man tagit totalt.
+
+    oGameData.playerScore = 0; // Baseras på playerTurn och totalSeconds?
+
     oGameData.gameField = [];
 
+    oGameData.cardCompare = [];
+
 }
 
-function executeMove (event) {
-    console.log(event.target);
+
+function executeMove (whichCard) {
+
+    let clickedCard = document.querySelector(`#backSide${whichCard}`);
+    if (oGameData.playerMove === 1 && oGameData.gameField[whichCard] !== undefined) {
+
+        oGameData.cardCompare.push(whichCard);
+        clickedCard.classList.remove(`back-side`);
+        console.log(`Första kortet = ${oGameData.gameField[oGameData.cardCompare[0]]}`);
+        oGameData.playerMove = 2;
+        
+    }
+
+    else if (oGameData.playerMove === 2 && oGameData.gameField[whichCard] !== undefined) {
+
+        if (!oGameData.cardCompare.includes(whichCard)) {
+
+            clickedCard.classList.remove(`back-side`);
+            oGameData.cardCompare.push(whichCard);
+        
+            if (oGameData.gameField[oGameData.cardCompare[0]] === oGameData.gameField[oGameData.cardCompare[1]]) {
+                console.log(`Andra kortet = ${oGameData.gameField[oGameData.cardCompare[1]]}`);
+                console.log(`Du har hittat ett par!`);
+                oGameData.playerMove = 1;
+                delete oGameData.gameField[oGameData.cardCompare[0]];
+                delete oGameData.gameField[oGameData.cardCompare[1]];
+                console.log(oGameData.gameField);
+                oGameData.cardCompare = [];
+                oGameData.playerTurn++;
+            }
+            else {
+                console.log(`Andra kortet = ${oGameData.gameField[oGameData.cardCompare[1]]}`);
+                console.log(`Otur försök igen!`);
+                oGameData.playerMove = 1;
+                setTimeout(() => {
+                    document.querySelector(`#backSide${oGameData.cardCompare[0]}`).classList.add('back-side');
+                    document.querySelector(`#backSide${oGameData.cardCompare[1]}`).classList.add('back-side');
+                    oGameData.cardCompare = [];
+                }, 1500);
+
+                oGameData.playerTurn++
+            }
+            gameDone();
+        }
+
+
+    }
+
 }
+
+function gameDone () { 
+    let isGameOver = oGameData.gameField.every(indexPosition => indexPosition === '');
+    if (isGameOver) {
+        let gamOver = document.querySelector(`.memory-container`);
+        gamOver.innerHTML = ``
+        let gameOverText = document.createElement(`h2`);
+        gameOverText.textContent = `Du vann. Kul för dig.`
+        gamOver.appendChild(gameOverText);
+        setTimeout(() => {
+            memoryGame();
+        }, 3000);
+
+
+
+    }
+}
+
 

@@ -168,10 +168,26 @@ function renderCards (cardSize, whatArray) {
 
         let cardContainerRef = document.createElement(`figure`);
         cardContainerRef.classList.add(`card`);
-        if ( cardSize === `smallCard`) {
-            cardContainerRef.addEventListener(`click`, executeMove);
+
+        if (cardSize === `smallCard`){
+            let backSideOfCard = document.createElement(`div`);
+            backSideOfCard.id = `backSide${i}`;
+            backSideOfCard.classList.add(`back-side`)
+            mainContainerRef.appendChild(backSideOfCard);
+            cardContainerRef.classList.add(`d-some`)
+            backSideOfCard.appendChild(cardContainerRef);
+
+            cardContainerRef.addEventListener(`click`, () => {
+                let cardNumber = i;
+                executeMove(cardNumber)
+            });
+
         }
-        mainContainerRef.appendChild(cardContainerRef);
+        else {
+            mainContainerRef.appendChild(cardContainerRef);
+        }
+        
+
 
         let imgRef = document.createElement(`img`);
         imgRef.classList.add(`card-photo`);
