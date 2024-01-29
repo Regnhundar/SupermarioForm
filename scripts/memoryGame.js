@@ -68,7 +68,7 @@ function initGlobalObject () {
 function executeMove (whichCard) {
 
     let clickedCard = document.querySelector(`#backSide${whichCard}`);
-    if (oGameData.playerMove === 1 && oGameData.gameField[whichCard] !== undefined) {
+    if (oGameData.playerMove === 1 && oGameData.gameField[whichCard] !== undefined && oGameData.cardCompare.length === 0) {
 
         oGameData.cardCompare.push(whichCard);
         clickedCard.classList.remove(`back-side`);
@@ -77,7 +77,7 @@ function executeMove (whichCard) {
         
     }
 
-    else if (oGameData.playerMove === 2 && oGameData.gameField[whichCard] !== undefined) {
+    else if (oGameData.playerMove === 2 && oGameData.gameField[whichCard] !== undefined && oGameData.cardCompare.length === 1) {
 
         if (!oGameData.cardCompare.includes(whichCard)) {
 

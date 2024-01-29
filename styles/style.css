@@ -89,6 +89,7 @@ form button {
 }
 
 .card-photo {
+    pointer-events: none;
     justify-self: center;
     object-fit: cover;
     object-position: top;
@@ -145,7 +146,7 @@ form button {
 } */
 
 .back-side {
-    filter: blur(50px);
+    filter: brightness(0);
     position: relative;
 }
 
