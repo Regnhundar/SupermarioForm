@@ -119,7 +119,6 @@ form button {
     flex-direction: column;
     justify-content: space-around;
     height:  90px;
-    padding: 1.5rem 0;
     pointer-events: none;
 }
 
@@ -161,8 +160,8 @@ form button {
 
 .d-some:hover {
     scale: 1.05;
-    filter: brightness(.9);
-    box-shadow: 0 0 0 4px rgb(0, 0, 0);
+    filter: brightness(.95);
+    box-shadow: 2px 2px 20px 4px #0e0e0e;
 
 }
 .d-none {
