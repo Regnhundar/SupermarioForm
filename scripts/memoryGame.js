@@ -4,6 +4,7 @@ function memoryGame () {
     // Skapar en variabel för spelbrädet och tömmer sedan brädet på sitt innehåll.
     // Tar bort klassen för content-container och sätter istället klassen memory-container för att byta styling i css.
     let gameBoard = document.querySelector(`#contentContainer`);
+    
     gameBoard.innerHTML = ``
     gameBoard.classList.remove(`content-container`);
     gameBoard.classList.add(`memory-container`)
