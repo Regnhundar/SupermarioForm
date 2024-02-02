@@ -177,7 +177,7 @@ function renderCards (cardSize, whatArray) {
             mainContainerRef.appendChild(backOfCardRef);
             backOfCardRef.id = `card${[i]}`;
 
-            cardContainerRef.classList.add(`d-none`);            
+            cardContainerRef.classList.add(`d-none`, `small-card`);            
             mainContainerRef.appendChild(cardContainerRef);
 
             backOfCardRef.addEventListener(`click`, () => {

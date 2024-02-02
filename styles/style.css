@@ -75,8 +75,6 @@ form button {
 }
 
 .card{
-    aspect-ratio: 63/88;
-    width: 230px;
     display: grid;
     padding: 1.5rem;
     background-color: #f3f3f2;
