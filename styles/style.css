@@ -143,7 +143,18 @@ form button {
     line-height: 1.5;
 }
 .d-some {
-   filter: brightness(0);
+background-color: #f6f7f2;
+   height: 358px;
+   width: 225px;
+   border-radius: 1rem;
+   border: 1px solid black;
+   transition: all .2s ease-in-out;
+}
+
+.d-some:hover {
+    scale: 1.03;
+    box-shadow: 0 0 0 2px black;
+
 }
 .d-none {
     display: none;

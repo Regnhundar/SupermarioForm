@@ -71,7 +71,8 @@ function executeMove (whichCard) {
     if (oGameData.playerMove === 1 && oGameData.gameField[whichCard] !== undefined && oGameData.cardCompare.length === 0) {
 
         oGameData.cardCompare.push(whichCard);
-        clickedCard.classList.remove(`d-some`);
+        clickedCard.classList.add(`d-none`);
+        clickedCard.nextElementSibling.classList.remove(`d-none`)
         console.log(`Första kortet = ${oGameData.gameField[oGameData.cardCompare[0]]}`);
         oGameData.playerMove = 2;
         
@@ -81,7 +82,8 @@ function executeMove (whichCard) {
 
         if (!oGameData.cardCompare.includes(whichCard)) {
 
-            clickedCard.classList.remove(`d-some`);
+            clickedCard.classList.add(`d-none`);
+            clickedCard.nextElementSibling.classList.remove(`d-none`)
             oGameData.cardCompare.push(whichCard);
         
             if (oGameData.gameField[oGameData.cardCompare[0]] === oGameData.gameField[oGameData.cardCompare[1]]) {
@@ -99,8 +101,10 @@ function executeMove (whichCard) {
                 console.log(`Otur försök igen!`);
                 oGameData.playerMove = 1;
                 setTimeout(() => {
-                    document.querySelector(`#card${oGameData.cardCompare[0]}`).classList.add(`d-some`);
-                    document.querySelector(`#card${oGameData.cardCompare[1]}`).classList.add(`d-some`);
+                    document.querySelector(`#card${oGameData.cardCompare[0]}`).classList.remove(`d-none`);
+                    document.querySelector(`#card${oGameData.cardCompare[0]}`).nextElementSibling.classList.add(`d-none`)
+                    document.querySelector(`#card${oGameData.cardCompare[1]}`).classList.remove(`d-none`);
+                    document.querySelector(`#card${oGameData.cardCompare[1]}`).nextElementSibling.classList.add(`d-none`)
                     oGameData.cardCompare = [];
                 }, 1500);
 
