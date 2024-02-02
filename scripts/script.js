@@ -168,20 +168,22 @@ function renderCards (cardSize, whatArray) {
 
         let cardContainerRef = document.createElement(`figure`);
         cardContainerRef.classList.add(`card`);
+        
 
         if (cardSize === `smallCard`){
-            let backSideOfCard = document.createElement(`div`);
-            backSideOfCard.id = `backSide${i}`;
-            backSideOfCard.classList.add(`back-side`)
-            mainContainerRef.appendChild(backSideOfCard);
-            cardContainerRef.classList.add(`d-some`)
-            backSideOfCard.appendChild(cardContainerRef);
 
-            cardContainerRef.addEventListener(`click`, () => {
+            let backOfCardRef = document.createElement(`figure`);
+            backOfCardRef.classList.add(`d-some`);
+            mainContainerRef.appendChild(backOfCardRef);
+            backOfCardRef.id = `card${[i]}`;
+
+            cardContainerRef.classList.add(`d-none`);            
+            mainContainerRef.appendChild(cardContainerRef);
+
+            backOfCardRef.addEventListener(`click`, () => {
                 let cardNumber = i;
                 executeMove(cardNumber)
             });
-
         }
         else {
             mainContainerRef.appendChild(cardContainerRef);
@@ -238,7 +240,7 @@ function renderCards (cardSize, whatArray) {
             captionRef.appendChild(cardDescription);
             cardDescription.textContent = whatArray[i].Description;
         }
-}
+    }
 }
 
 function logOut() {
