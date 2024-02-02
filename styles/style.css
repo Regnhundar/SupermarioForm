@@ -69,6 +69,7 @@ form button {
 .memory-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+
     gap: 1rem;
     max-width: 1200px;
     margin: 1rem auto;
@@ -81,6 +82,7 @@ form button {
     border: 1px solid #444;
     border-radius: 1rem;
     transition: all .2s ease-in-out;
+    /* filter: brightness(0); */
 }
 
 .card:hover {
@@ -88,6 +90,7 @@ form button {
 }
 
 .card-photo {
+    pointer-events: none;
     justify-self: center;
     object-fit: cover;
     object-position: top;
@@ -98,30 +101,40 @@ form button {
     box-shadow: inset 4px 4px 10px rgb(140, 141, 128);
 }
 
-.caption-container{
+.caption-container-big {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: 50px 30px 100px;
     padding: 4rem 0;
 }
 
+.caption-container-small {
+    display:flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height:  90px;
+    padding: 1.5rem 0;
+    pointer-events: none;
+}
+
 .card-header {
-    margin-bottom: 1rem;
     font-size: 1.2rem;
     font-family: 'Press Start 2P';
     grid-area: auto / auto / 1 / span 2;
-    display: inline-block;
 }
 
 .card-occupation{
     font-style: italic;
+    align-self: center;
 }
 
 .card-age {
     grid-area: auto / auto / 2 / 3;
     font-style: italic;
     justify-self: center;
-
+    align-self: center;
 }
+
 .card-description {
     grid-column: span 2;
     margin-top: 1rem;
@@ -129,7 +142,9 @@ form button {
     overflow: hidden;
     line-height: 1.5;
 }
-
+.d-some {
+   filter: brightness(0);
+}
 .d-none {
     display: none;
 }
