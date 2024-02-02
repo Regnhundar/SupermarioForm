@@ -67,11 +67,11 @@ function initGlobalObject () {
 
 function executeMove (whichCard) {
 
-    let clickedCard = document.querySelector(`#backSide${whichCard}`);
+    let clickedCard = document.querySelector(`#card${whichCard}`);
     if (oGameData.playerMove === 1 && oGameData.gameField[whichCard] !== undefined && oGameData.cardCompare.length === 0) {
 
         oGameData.cardCompare.push(whichCard);
-        clickedCard.classList.remove(`back-side`);
+        clickedCard.classList.remove(`d-some`);
         console.log(`Första kortet = ${oGameData.gameField[oGameData.cardCompare[0]]}`);
         oGameData.playerMove = 2;
         
@@ -81,7 +81,7 @@ function executeMove (whichCard) {
 
         if (!oGameData.cardCompare.includes(whichCard)) {
 
-            clickedCard.classList.remove(`back-side`);
+            clickedCard.classList.remove(`d-some`);
             oGameData.cardCompare.push(whichCard);
         
             if (oGameData.gameField[oGameData.cardCompare[0]] === oGameData.gameField[oGameData.cardCompare[1]]) {
@@ -99,8 +99,8 @@ function executeMove (whichCard) {
                 console.log(`Otur försök igen!`);
                 oGameData.playerMove = 1;
                 setTimeout(() => {
-                    document.querySelector(`#backSide${oGameData.cardCompare[0]}`).classList.add('back-side');
-                    document.querySelector(`#backSide${oGameData.cardCompare[1]}`).classList.add('back-side');
+                    document.querySelector(`#card${oGameData.cardCompare[0]}`).classList.add(`d-some`);
+                    document.querySelector(`#card${oGameData.cardCompare[1]}`).classList.add(`d-some`);
                     oGameData.cardCompare = [];
                 }, 1500);
 
