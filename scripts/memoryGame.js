@@ -14,7 +14,7 @@ function memoryGame () {
     document.querySelector(`.memory-button`).classList.add(`d-none`);
     let moveCounter = document.querySelector(`#errorMsg`);
     moveCounter.classList.remove(`d-none`);
-    moveCounter.textContent = oGameData.playerMaxTurn;
+    moveCounter.textContent = oGameData.cardFlipsLeft;
 
     // Duplicerar arrayen characters genom map() metoden som returnerar varje element och sedan sparas i en ny array (charactersCopy).
     let charactersCopy = characters.map(character => (character));
@@ -55,7 +55,7 @@ function initGlobalObject () {
 
     oGameData.playerMove = 1; // Vilket kort man ska visa.
 
-    oGameData.playerMaxTurn = 100; // Hur många drag man har kvar.
+    oGameData.cardFlipsLeft = 100; // Hur många drag man har kvar.
 
     oGameData.turnSeconds = 15; // Hur lång tid man har på sig att göra ett drag.
 
@@ -82,9 +82,9 @@ function executeMove (whichCard) {
         
 
         oGameData.playerMove = 2;
-        oGameData.playerMaxTurn--
-        moveCounter.textContent = oGameData.playerMaxTurn
-        console.log(oGameData.playerMaxTurn);
+        oGameData.cardFlipsLeft--
+        moveCounter.textContent = oGameData.cardFlipsLeft
+
         
     }
 
@@ -99,9 +99,8 @@ function executeMove (whichCard) {
             if (oGameData.gameField[oGameData.cardCompare[0]] === oGameData.gameField[oGameData.cardCompare[1]]) {
                 console.log(`Andra kortet = ${oGameData.gameField[oGameData.cardCompare[1]]}`);
                 console.log(`Du har hittat ett par!`);
-                oGameData.playerMaxTurn--
-                moveCounter.textContent = oGameData.playerMaxTurn
-                console.log(oGameData.playerMaxTurn);
+                oGameData.cardFlipsLeft--
+                moveCounter.textContent = oGameData.cardFlipsLeft
                 oGameData.playerMove = 1;
                 delete oGameData.gameField[oGameData.cardCompare[0]];
                 delete oGameData.gameField[oGameData.cardCompare[1]];
@@ -111,10 +110,10 @@ function executeMove (whichCard) {
             else {
                 console.log(`Andra kortet = ${oGameData.gameField[oGameData.cardCompare[1]]}`);
                 console.log(`Otur försök igen!`);
-                oGameData.playerMaxTurn--
-                moveCounter.textContent = oGameData.playerMaxTurn
-                console.log(oGameData.playerMaxTurn);
+                oGameData.cardFlipsLeft--
+                moveCounter.textContent = oGameData.cardFlipsLeft
                 oGameData.playerMove = 1;
+
                 
                 setTimeout(() => {
                     document.querySelector(`#card${oGameData.cardCompare[0]}`).classList.remove(`d-none`);
@@ -143,9 +142,6 @@ function gameDone () {
         setTimeout(() => {
             memoryGame();
         }, 3000);
-
-
-
     }
 }
 
