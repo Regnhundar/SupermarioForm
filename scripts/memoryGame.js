@@ -1,4 +1,5 @@
 function memoryGame () {
+
     // Initierar det globala objektet som håller informationen om spelet.
     initGlobalObject ();
     // Skapar en variabel för spelbrädet och tömmer sedan brädet på sitt innehåll.
@@ -12,9 +13,9 @@ function memoryGame () {
     // Visar tillbakaknappen och döljer knappen för memory.
     document.querySelector(`.back-button`).classList.remove(`d-none`);
     document.querySelector(`.memory-button`).classList.add(`d-none`);
-    let moveCounter = document.querySelector(`#errorMsg`);
-    moveCounter.classList.remove(`d-none`);
-    moveCounter.textContent = oGameData.cardFlipsLeft;
+    let cardFlipCounter = document.querySelector(`#errorMsg`);
+    cardFlipCounter.classList.remove(`d-none`);
+    cardFlipCounter.textContent = oGameData.cardFlipsLeft;
 
     // Duplicerar arrayen characters genom map() metoden som returnerar varje element och sedan sparas i en ny array (charactersCopy).
     let charactersCopy = characters.map(character => (character));
@@ -38,11 +39,11 @@ function memoryGame () {
      }
      // Vi skapar spelplanen genom att pusha namnen på objekten till oGameData.gameField i den ordning de förekommer i memoryArray.
      for (let i = 0; i < memoryArray.length; i++) {
-        oGameData.gameField.push(memoryArray[i].Name)
+        oGameData.gameField.push(memoryArray[i].Name);
      }
 
  
-        renderCards(`smallCard`, memoryArray)
+        renderCards(`smallCard`, memoryArray);
     
 }
 
@@ -57,33 +58,30 @@ function initGlobalObject () {
 
     oGameData.cardFlipsLeft = 100; // Hur många drag man har kvar.
 
-    oGameData.turnSeconds = 15; // Hur lång tid man har på sig att göra ett drag.
-
-    oGameData.totalSeconds = 0; // Summerar hur många sekunder man tagit totalt.
-
     oGameData.gameField = [];
 
     oGameData.cardCompare = [];
 
 }
 
-
+// whichCard är en siffra. Används för att hämta innehåll på index-position i andra arrayer. Se eventlyssnaren som anropar executeMove.
 function executeMove (whichCard) {
 
     let clickedCard = document.querySelector(`#card${whichCard}`);
-    let moveCounter = document.querySelector(`#errorMsg`);
+    let cardFlipCounter = document.querySelector(`#errorMsg`);
     
     if (oGameData.playerMove === 1 && oGameData.gameField[whichCard] !== undefined && oGameData.cardCompare.length === 0) {
 
         oGameData.cardCompare.push(whichCard);
         clickedCard.classList.add(`d-none`);
-        clickedCard.nextElementSibling.classList.remove(`d-none`)
+        clickedCard.nextElementSibling.classList.remove(`d-none`);
+
         console.log(`Första kortet = ${oGameData.gameField[oGameData.cardCompare[0]]}`);
         
 
         oGameData.playerMove = 2;
-        oGameData.cardFlipsLeft--
-        moveCounter.textContent = oGameData.cardFlipsLeft
+        oGameData.cardFlipsLeft--;
+        cardFlipCounter.textContent = oGameData.cardFlipsLeft;
 
         
     }
@@ -93,25 +91,36 @@ function executeMove (whichCard) {
         if (!oGameData.cardCompare.includes(whichCard)) {
 
             clickedCard.classList.add(`d-none`);
-            clickedCard.nextElementSibling.classList.remove(`d-none`)
+            clickedCard.nextElementSibling.classList.remove(`d-none`);
+            
             oGameData.cardCompare.push(whichCard);
         
             if (oGameData.gameField[oGameData.cardCompare[0]] === oGameData.gameField[oGameData.cardCompare[1]]) {
                 console.log(`Andra kortet = ${oGameData.gameField[oGameData.cardCompare[1]]}`);
                 console.log(`Du har hittat ett par!`);
-                oGameData.cardFlipsLeft--
-                moveCounter.textContent = oGameData.cardFlipsLeft
+                oGameData.cardFlipsLeft--;
+                cardFlipCounter.textContent = oGameData.cardFlipsLeft;
                 oGameData.playerMove = 1;
                 delete oGameData.gameField[oGameData.cardCompare[0]];
                 delete oGameData.gameField[oGameData.cardCompare[1]];
-                oGameData.cardCompare = [];
+                let matchedOne = document.querySelector(`#card${[oGameData.cardCompare[0]]}`).nextElementSibling;
+                matchedOne.classList.add(`matched`);
+                matchedOne.style.boxShadow  = ``;
+                // Utan timout får inte båda korten transition som står i css. OBS BARA EN SKUGGA FÖRSVINNER. FIX IT FIX IT FIX IT!
+                setTimeout(() => {
+                    let matchedTwo = document.querySelector(`#card${[oGameData.cardCompare[1]]}`).nextElementSibling;
+                    matchedTwo.classList.add(`matched`)
+                    matchedTwo.computedStyleMap.boxShadow = ``;
+                    oGameData.cardCompare = [];
+                },50);
+                
                 
             }
             else {
                 console.log(`Andra kortet = ${oGameData.gameField[oGameData.cardCompare[1]]}`);
                 console.log(`Otur försök igen!`);
-                oGameData.cardFlipsLeft--
-                moveCounter.textContent = oGameData.cardFlipsLeft
+                oGameData.cardFlipsLeft--;
+                cardFlipCounter.textContent = oGameData.cardFlipsLeft;
                 oGameData.playerMove = 1;
 
                 
@@ -131,13 +140,44 @@ function executeMove (whichCard) {
 
 }
 
+function checkHighScore () {
+    try{
+    // `currentUser` kommer från funktion som anropas vid login `setUser()`
+    let currentUserId = localStorage.getItem(`currentUser`);
+    // Ifall ingen är inloggad.
+    if(!currentUserId) {
+        return null;
+    }
+    let users = getUsers();
+    // Hittar objektet som har samma id som currentUserId och gör om det till en integer(siffra) innan jämförelse.
+    let currentUser = users.find(user => user.id === parseInt(currentUserId));
+    // Om en användare hittas kollar vi om highscore är lägre än antal drag som är kvar.
+    if (currentUser.highscore < oGameData.cardFlipsLeft){
+        currentUser.highscore = oGameData.cardFlipsLeft;
+        console.log(`New highscore = ${currentUser.highscore}`);
+        // Måste skriva raden nedan annars sparas inte nya poängen i objektet.
+        localStorage.setItem('users', JSON.stringify(users));
+    }
+} catch(error){
+    console.log(error);
+    return null;
+}
+}
+
 function gameDone () { 
     let isGameOver = oGameData.gameField.every(indexPosition => indexPosition === '');
-    if (isGameOver) {
+
+    if (isGameOver || oGameData.cardFlipsLeft === 0) {
         let gamOver = document.querySelector(`.memory-container`);
-        gamOver.innerHTML = ``
+        gamOver.innerHTML = ``;
         let gameOverText = document.createElement(`h2`);
-        gameOverText.textContent = `Du vann. Kul för dig.`
+        if (isGameOver){
+        checkHighScore ();
+        gameOverText.textContent = `Grattis du vann med ${oGameData.cardFlipsLeft} drag kvar!`;
+        }
+        else if (oGameData.cardFlipsLeft === 0){
+            gameOverText.textContent = `GAME OVER!`;
+        }
         gamOver.appendChild(gameOverText);
         setTimeout(() => {
             memoryGame();
