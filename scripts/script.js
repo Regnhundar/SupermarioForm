@@ -1,8 +1,12 @@
 'use strict';
 
-window.addEventListener(`load`,initPage)
+window.addEventListener(`load`,() => {
+    initPage();
+    initContent()
+})
 
 function initPage() {
+    
     document.querySelector(`#registerForm`).classList.add(`d-none`);
     document.querySelector(`#registerForm button`).addEventListener(`click`, validateRegistration);
 
@@ -42,44 +46,30 @@ function initPage() {
 
         }
     })
-    initContent()
+    // initContent()
 }
 
 
-function validateLogin(regName, regPassInput) {
 
+
+function validateLogin() {
+   
+try {  
     event.preventDefault();
     let logInName = document.querySelector(`#username`);
-    let userObject = users.filter(object => object.username === logInName.value); // Filter-funktionen tar ut objektet vars användarnamn matchar variabeln logInName
+    let userObject = users.find(object => object.username === logInName.value); // Find-metoden tar ut objektet vars användarnamn matchar variabeln logInName
     let checkedName = users.some(user => user.username === logInName.value); // returnerar true/false ifall arrayen har ett username som är variabeln logInName
+    let users = getUsers();
     
-    let userRegObject = users.filter(object => object.username === regName);
-    let checkedRegName = users.some(user => user.username === regName);
-    
-try {   // Kan skippa att skriva: "=== true" och bara skriva: "if (checkedName || checkedRegName)" då "some" metoden returnerar true/false. 
-        // Vill man kolla efter false så !checkedName. 
-    if (checkedName === true || checkedRegName === true) {
+    if (checkedName === true) {
 
         let passwordInput = document.querySelector(`#password`);
 
-        // Då passwordInput och regPassInput ligger i olika formulär kommer ett formulär alltid vara tomt så man måste göra en check annars error.
-        // Om regPassInput är tomt så är det undefined.
-        if (passwordInput.value !== `` || passwordInput.value  === `` && regPassInput === undefined) {
+        if (passwordInput.value !== userObject.password) {
 
-            // Kollar lösenordet på plats 0 i arrayen userObject för att se ifall det matchar variabeln passwordInput
-            if (passwordInput.value === userObject[0].password) {
-            initContent();
-            }
-            else {
-                throw {
-                    nodeRef : passwordInput,
-                    msg : `Fel lösenord!`
-                }
-            }
-        }
-        else if (regPassInput !== undefined){
-            if (regPassInput === userRegObject[0].password) {
-                initContent();
+            throw {
+                nodeRef : passwordInput,
+                msg : `Fel lösenord!`
             }
         }
     }
@@ -89,6 +79,10 @@ try {   // Kan skippa att skriva: "=== true" och bara skriva: "if (checkedName |
             msg : `Det finns ingen användare med namnet: ${logInName.value}!`
         }
     }
+    setUser(userObject.id);
+    initContent();
+
+
 } catch (error) {
     console.log(error);   
     document.querySelector(`#errorMsg`).textContent = error.msg;
@@ -96,15 +90,21 @@ try {   // Kan skippa att skriva: "=== true" och bara skriva: "if (checkedName |
 
 }}
 
-function validateRegistration() {
+
+
+function validateRegistration(event) {
+
+
+    try {    
+        
     event.preventDefault();
-    
+    let users = getUsers();
     let logInName = document.querySelector(`#uName`);
     let checkedName = users.some(user => user.username === logInName.value);
-    let suggestedPassword = document.querySelector(`#pWord`)
-    let suggestedPasswordAgain = document.querySelector(`#pWordAgain`)
+    let suggestedPassword = document.querySelector(`#pWord`);
+    let suggestedPasswordAgain = document.querySelector(`#pWordAgain`);
+    
 
-    try {
         if (checkedName === true) {
             throw {
         nodeRef : logInName, 
@@ -131,9 +131,8 @@ function validateRegistration() {
                 }
             }
             else {
-                let accountInfo = { username: logInName.value, password: suggestedPassword.value };
-                users.push(accountInfo);
-                validateLogin(logInName.value, suggestedPassword.value); // Tas emot i validateLogin som (regName, regPassInput).        
+                addUser(logInName.value, suggestedPassword.value);
+                initContent();
             }
         }
         }
@@ -144,8 +143,52 @@ function validateRegistration() {
         }
 }
 
+function getUsers() {
+
+    try {
+        const usersString = localStorage.getItem(`users`) || JSON.stringify([]);
+
+        let users = JSON.parse(usersString);
+        return users;
+        
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+
+}
+
+function setUser(userId) {
+    console.log(setUser());
+    localStorage.setItem(`currentUser`, userId);
+}
+
+function addUser(userName, userPassword) {
+
+    try {
+        let users = getUsers();
+
+        let usersId = 1;
+
+        if(users.length > 0) {
+            usersId = users[users.length - 1].id + 1;
+        }
+    let newUser = {
+        id : usersId,
+        username : userName,
+        password: userPassword
+    }
+
+    users.push(newUser);
+
+    localStorage.setItem(`users`, JSON.stringify(users));
+
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 function initContent() {
-    console.log(`initContent()`);
     let errorMsg = document.querySelector(`#errorMsg`);
     errorMsg.textContent = ``;
     errorMsg.classList.add(`d-none`);
@@ -161,7 +204,6 @@ function initContent() {
 }
 
 function renderCards (cardSize, whatArray) {
-
     let mainContainerRef = document.querySelector(`#contentContainer`);
 
     for (let i = 0; i < whatArray.length; i++){
@@ -173,7 +215,7 @@ function renderCards (cardSize, whatArray) {
         if (cardSize === `smallCard`){
 
             let backOfCardRef = document.createElement(`figure`);
-            backOfCardRef.classList.add(`d-some`);
+            backOfCardRef.classList.add(`back-of-card`);
             mainContainerRef.appendChild(backOfCardRef);
             backOfCardRef.id = `card${[i]}`;
 

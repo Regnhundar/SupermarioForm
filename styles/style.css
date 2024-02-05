@@ -61,7 +61,7 @@ form button {
 .content-container{
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1rem;
+    gap: 2rem;
     max-width: 1200px;
     margin: 1rem auto;
 }
@@ -75,13 +75,13 @@ form button {
 }
 
 .card{
+
     display: grid;
     padding: 1.5rem;
     background-color: #f3f3f2;
     border: 1px solid #444;
     border-radius: 1rem;
     transition: all .2s ease-in-out;
-    /* filter: brightness(0); */
 }
 
 .small-card {
@@ -145,23 +145,25 @@ form button {
     overflow: hidden;
     line-height: 1.5;
 }
-.d-some {
-    background-image: url(/assets/Backside.svg);
+.back-of-card {
+    background-image: url(/assets/BacksideUtan.svg);
     background-repeat: no-repeat;
     background-size: contain;
+    background-position: center;
     aspect-ratio: 63/88;
     width: 230px;
-    border-radius: 1rem;
-    border: 1px solid rgb(156, 154, 154);
+    cursor: pointer;
     transition: all .2s ease-in-out;
 }
 
-.d-some:hover {
+.back-of-card:hover {
     scale: 1.05;
-    filter: brightness(.95);
-    box-shadow: 2px 2px 20px 4px #0e0e0e;
-
+    filter: brightness(1.1);
 }
 .d-none {
     display: none;
+}
+
+.matched {
+    filter: grayscale(1);
 }
