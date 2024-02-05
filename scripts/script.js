@@ -160,7 +160,6 @@ function getUsers() {
 }
 
 function setUser(userId) {
-    console.log(`setUser()`);
     localStorage.setItem(`currentUser`, userId);
 }
 
@@ -169,15 +168,16 @@ function addUser(userName, userPassword) {
     try {
         let users = getUsers();
 
-        let usersId = 1;
+        let userId = 1;
 
         if(users.length > 0) {
-            usersId = users[users.length - 1].id + 1;
+            userId = users[users.length - 1].id + 1;
         }
     let newUser = {
-        id : usersId,
+        id : userId,
         username : userName,
-        password: userPassword
+        password : userPassword,
+        highscore : 0
     }
 
     users.push(newUser);
@@ -221,23 +221,26 @@ function renderCards (cardSize, whatArray) {
             backOfCardRef.id = `card${[i]}`;
 
             cardContainerRef.classList.add(`d-none`, `small-card`);            
-            mainContainerRef.appendChild(cardContainerRef);
+
 
             backOfCardRef.addEventListener(`click`, () => {
                 let cardNumber = i;
                 executeMove(cardNumber)
             });
         }
-        else {
-            mainContainerRef.appendChild(cardContainerRef);
-        }
+        mainContainerRef.appendChild(cardContainerRef);
         
-
-
         let imgRef = document.createElement(`img`);
         imgRef.classList.add(`card-photo`);
         imgRef.src = whatArray[i].Image;
         imgRef.alt = `Bild på ${whatArray[i].Name}`
+
+          
+        
+        
+        let captionRef = document.createElement(`figcaption`);
+        if(cardSize === `bigCard`) {
+            cardContainerRef.classList.add(`big`);
         // Fungerar på samma vis som css :hover men vi baserar bakgrundsfärgen på färgen som står i objektet under Color.
         cardContainerRef.addEventListener('mouseenter', function () {
             cardContainerRef.style.boxShadow = `2px 2px 20px ${whatArray[i].Color}`;
@@ -246,16 +249,13 @@ function renderCards (cardSize, whatArray) {
           cardContainerRef.addEventListener('mouseleave', function () {
             cardContainerRef.style.boxShadow = ``;
           });
-          
-        cardContainerRef.appendChild(imgRef);
-        
-        let captionRef = document.createElement(`figcaption`);
-        if(cardSize === `bigCard`) {
             captionRef.classList.add(`caption-container-big`);
         }
         else if (cardSize === `smallCard`) {
+            cardContainerRef.style.boxShadow = `0px 0px 20px ${whatArray[i].Color}`;
             captionRef.classList.add(`caption-container-small`);
         }
+        cardContainerRef.appendChild(imgRef);
         cardContainerRef.appendChild(captionRef);
 
         let cardName = document.createElement(`h3`);
