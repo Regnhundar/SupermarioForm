@@ -56,10 +56,11 @@ function validateLogin() {
    
 try {  
     event.preventDefault();
+    let users = getUsers();
     let logInName = document.querySelector(`#username`);
     let userObject = users.find(object => object.username === logInName.value); // Find-metoden tar ut objektet vars användarnamn matchar variabeln logInName
     let checkedName = users.some(user => user.username === logInName.value); // returnerar true/false ifall arrayen har ett username som är variabeln logInName
-    let users = getUsers();
+
     
     if (checkedName === true) {
 
@@ -159,7 +160,7 @@ function getUsers() {
 }
 
 function setUser(userId) {
-    console.log(setUser());
+    console.log(`setUser()`);
     localStorage.setItem(`currentUser`, userId);
 }
 
@@ -286,7 +287,9 @@ function renderCards (cardSize, whatArray) {
 }
 
 function logOut() {
-    document.querySelector(`#errorMsg`).classList.remove(`d-none`);
+    let errorMsg = document.querySelector(`#errorMsg`);
+    errorMsg.classList.remove(`d-none`);
+    errorMsg.textContent = ``;
     document.querySelector(`#contentContainer`).innerHTML = ``
     // Om man bara lägger till klassen d-none för att dölja logout-knappen vi skapat så skapar vi en ny varje gång vi loggar in och ut.
     document.querySelector(`.logout-button`).classList.add(`d-none`);
