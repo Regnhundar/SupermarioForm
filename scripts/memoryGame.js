@@ -12,6 +12,10 @@ function memoryGame () {
     // Visar tillbakaknappen och döljer knappen för memory.
     document.querySelector(`.back-button`).classList.remove(`d-none`);
     document.querySelector(`.memory-button`).classList.add(`d-none`);
+    let moveCounter = document.querySelector(`#errorMsg`);
+    moveCounter.classList.remove(`d-none`);
+    moveCounter.textContent = oGameData.playerMaxTurn;
+
     // Duplicerar arrayen characters genom map() metoden som returnerar varje element och sedan sparas i en ny array (charactersCopy).
     let charactersCopy = characters.map(character => (character));
     // Skapar en ny array, combinedCharacters, som är resultatet av att vi konkatenerar (sätter ihop) characters och charactersCopy.
@@ -51,13 +55,11 @@ function initGlobalObject () {
 
     oGameData.playerMove = 1; // Vilket kort man ska visa.
 
-    oGameData.playerTurn = 0; // Hur många drag man gjort.
+    oGameData.playerMaxTurn = 100; // Hur många drag man har kvar.
 
     oGameData.turnSeconds = 15; // Hur lång tid man har på sig att göra ett drag.
 
     oGameData.totalSeconds = 0; // Summerar hur många sekunder man tagit totalt.
-
-    oGameData.playerScore = 0; // Baseras på playerTurn och totalSeconds?
 
     oGameData.gameField = [];
 
@@ -69,13 +71,20 @@ function initGlobalObject () {
 function executeMove (whichCard) {
 
     let clickedCard = document.querySelector(`#card${whichCard}`);
+    let moveCounter = document.querySelector(`#errorMsg`);
+    
     if (oGameData.playerMove === 1 && oGameData.gameField[whichCard] !== undefined && oGameData.cardCompare.length === 0) {
 
         oGameData.cardCompare.push(whichCard);
         clickedCard.classList.add(`d-none`);
         clickedCard.nextElementSibling.classList.remove(`d-none`)
         console.log(`Första kortet = ${oGameData.gameField[oGameData.cardCompare[0]]}`);
+        
+
         oGameData.playerMove = 2;
+        oGameData.playerMaxTurn--
+        moveCounter.textContent = oGameData.playerMaxTurn
+        console.log(oGameData.playerMaxTurn);
         
     }
 
@@ -90,17 +99,23 @@ function executeMove (whichCard) {
             if (oGameData.gameField[oGameData.cardCompare[0]] === oGameData.gameField[oGameData.cardCompare[1]]) {
                 console.log(`Andra kortet = ${oGameData.gameField[oGameData.cardCompare[1]]}`);
                 console.log(`Du har hittat ett par!`);
+                oGameData.playerMaxTurn--
+                moveCounter.textContent = oGameData.playerMaxTurn
+                console.log(oGameData.playerMaxTurn);
                 oGameData.playerMove = 1;
                 delete oGameData.gameField[oGameData.cardCompare[0]];
                 delete oGameData.gameField[oGameData.cardCompare[1]];
-                console.log(oGameData.gameField);
                 oGameData.cardCompare = [];
-                oGameData.playerTurn++;
+                
             }
             else {
                 console.log(`Andra kortet = ${oGameData.gameField[oGameData.cardCompare[1]]}`);
                 console.log(`Otur försök igen!`);
+                oGameData.playerMaxTurn--
+                moveCounter.textContent = oGameData.playerMaxTurn
+                console.log(oGameData.playerMaxTurn);
                 oGameData.playerMove = 1;
+                
                 setTimeout(() => {
                     document.querySelector(`#card${oGameData.cardCompare[0]}`).classList.remove(`d-none`);
                     document.querySelector(`#card${oGameData.cardCompare[0]}`).nextElementSibling.classList.add(`d-none`)
@@ -108,8 +123,6 @@ function executeMove (whichCard) {
                     document.querySelector(`#card${oGameData.cardCompare[1]}`).nextElementSibling.classList.add(`d-none`)
                     oGameData.cardCompare = [];
                 }, 1500);
-
-                oGameData.playerTurn++
             }
             gameDone();
         }
