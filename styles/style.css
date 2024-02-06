@@ -13,8 +13,10 @@ body {
     margin: 0 auto;
     background-color: #ebe7e2;
     color: #333;
-    max-width: 1400px;
     font-family: 'Josefin Sans';
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 form {
@@ -71,13 +73,13 @@ form button {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 2rem;
     max-width: 1300px;
-    margin: 1rem auto;
+    margin: 0 auto 2rem auto;
 }
 
 .card{
-
+    user-select: none; /*förhindrar att användaren markerar bild eller text genom att hålla ned musknappen och dra. */
     display: grid;
-    padding: 1.5rem;
+    padding: 1.2rem;
     background-color: #f3f3f2;
     border: 1px solid #444;
     border-radius: 1rem;
@@ -89,7 +91,7 @@ form button {
     background-size: contain;
     background-position: center;
     aspect-ratio: 63/88;
-    width: 230px;
+    width: 184px;
     cursor: pointer;
     transition: all .2s ease-in-out;
 }
@@ -101,7 +103,7 @@ form button {
 
 .small-card {
     aspect-ratio: 63/88;
-    width: 230px;
+    width: 184px;
     scale: 1.07;
 }
 
@@ -114,8 +116,8 @@ form button {
     justify-self: center;
     object-fit: cover;
     object-position: top;
-    height: 170px;
-    width: 170px;
+    height: 136px;
+    width: 136px;
     border-radius: 50%;
     background-color: #ebe7e2;
     box-shadow: inset 4px 4px 10px rgb(140, 141, 128);
@@ -132,7 +134,7 @@ form button {
     display:flex;
     flex-direction: column;
     justify-content: space-around;
-    height:  90px;
+    height:  72px;
     pointer-events: none;
 }
 
@@ -169,5 +171,16 @@ form button {
 .matched {
     filter: grayscale(1);
     scale: 1;
-    transition: all .5s ease-in;
+    transition: all .2s ease-in;
+}
+
+.jumbotron {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.point-counter {
+    align-self: center;
+    font-size: 5rem;
 }

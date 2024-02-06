@@ -4,18 +4,30 @@ function memoryGame () {
     initGlobalObject ();
     // Skapar en variabel för spelbrädet och tömmer sedan brädet på sitt innehåll.
     // Tar bort klassen för content-container och sätter istället klassen memory-container för att byta styling i css.
+
     let gameBoard = document.querySelector(`#contentContainer`);
-    
-    gameBoard.innerHTML = ``
+    let jumbotron = document.querySelector(`#jumbotron`);
+
+    let backButton = document.querySelector(`.back-button`);
+    backButton.classList.remove(`d-none`);
+
+    let pointCounter = document.createElement(`h2`);
+    pointCounter.classList.add(`point-counter`);
+    pointCounter.textContent = oGameData.cardFlipsLeft;
+    // fungerar som en pseudo-insertAfter();
+    jumbotron.insertBefore(pointCounter, backButton.nextSibling);
+
+    let logoutButton = document.querySelector(`.logout-button`);
+    logoutButton.classList.remove(`d-none`);
+
+    gameBoard.innerHTML = ``;
     gameBoard.classList.remove(`content-container`);
-    gameBoard.classList.add(`memory-container`)
+    gameBoard.classList.add(`memory-container`);
 
     // Visar tillbakaknappen och döljer knappen för memory.
-    document.querySelector(`.back-button`).classList.remove(`d-none`);
+    
     document.querySelector(`.memory-button`).classList.add(`d-none`);
-    let cardFlipCounter = document.querySelector(`#errorMsg`);
-    cardFlipCounter.classList.remove(`d-none`);
-    cardFlipCounter.textContent = oGameData.cardFlipsLeft;
+
 
     // Duplicerar arrayen characters genom map() metoden som returnerar varje element och sedan sparas i en ny array (charactersCopy).
     let charactersCopy = characters.map(character => (character));
@@ -32,7 +44,7 @@ function memoryGame () {
 
          let randomNumber = Math.floor(Math.random() * combinedCharacters.length);
          // Lägger ett random kort ur combinedCharacters på sista index position i memoryArray.
-         memoryArray.push(combinedCharacters[randomNumber])
+         memoryArray.push(combinedCharacters[randomNumber]);
          // Det kort som ligger på [randomNumber] i combinedCharacters arrayen tas bort. På så vis räknas loopen ned och säkerställer
          // att varje kort enbart placeras i memoryArray en gång. Andra siffran är hur många som ska bort och första siffran är vilken position vi börjar ta från.
          combinedCharacters.splice(randomNumber, 1);
@@ -42,15 +54,11 @@ function memoryGame () {
         oGameData.gameField.push(memoryArray[i].Name);
      }
 
- 
         renderCards(`smallCard`, memoryArray);
     
 }
 
-
 let oGameData = {};
-
-
 
 function initGlobalObject () {
 
@@ -61,14 +69,13 @@ function initGlobalObject () {
     oGameData.gameField = [];
 
     oGameData.cardCompare = [];
-
 }
 
 // whichCard är en siffra. Används för att hämta innehåll på index-position i andra arrayer. Se eventlyssnaren som anropar executeMove.
 function executeMove (whichCard) {
 
     let clickedCard = document.querySelector(`#card${whichCard}`);
-    let cardFlipCounter = document.querySelector(`#errorMsg`);
+    let cardFlipCounter = document.querySelector(`.point-counter`);
     
     if (oGameData.playerMove === 1 && oGameData.gameField[whichCard] !== undefined && oGameData.cardCompare.length === 0) {
 
@@ -82,8 +89,7 @@ function executeMove (whichCard) {
         oGameData.playerMove = 2;
         oGameData.cardFlipsLeft--;
         cardFlipCounter.textContent = oGameData.cardFlipsLeft;
-
-        
+   
     }
 
     else if (oGameData.playerMove === 2 && oGameData.gameField[whichCard] !== undefined && oGameData.cardCompare.length === 1) {
@@ -103,17 +109,18 @@ function executeMove (whichCard) {
                 oGameData.playerMove = 1;
                 delete oGameData.gameField[oGameData.cardCompare[0]];
                 delete oGameData.gameField[oGameData.cardCompare[1]];
+
                 let matchedOne = document.querySelector(`#card${[oGameData.cardCompare[0]]}`).nextElementSibling;
                 matchedOne.classList.add(`matched`);
                 matchedOne.style.boxShadow  = ``;
-                // Utan timout får inte båda korten transition som står i css. OBS BARA EN SKUGGA FÖRSVINNER. FIX IT FIX IT FIX IT!
-                setTimeout(() => {
-                    let matchedTwo = document.querySelector(`#card${[oGameData.cardCompare[1]]}`).nextElementSibling;
-                    matchedTwo.classList.add(`matched`)
-                    matchedTwo.computedStyleMap.boxShadow = ``;
-                    oGameData.cardCompare = [];
-                },50);
                 
+                let matchedTwo = document.querySelector(`#card${[oGameData.cardCompare[1]]}`).nextElementSibling;
+                matchedTwo.style.boxShadow = ``;
+                // Utan timout får inte båda korten transition som står i css.
+                setTimeout(() => {
+                    matchedTwo.classList.add(`matched`)
+                },50);
+                oGameData.cardCompare = [];
                 
             }
             else {
@@ -134,42 +141,42 @@ function executeMove (whichCard) {
             }
             gameDone();
         }
-
-
     }
-
 }
 
 function checkHighScore () {
-    try{
-    // `currentUser` kommer från funktion som anropas vid login `setUser()`
-    let currentUserId = localStorage.getItem(`currentUser`);
-    // Ifall ingen är inloggad.
-    if(!currentUserId) {
-        return null;
-    }
-    let users = getUsers();
-    // Hittar objektet som har samma id som currentUserId och gör om det till en integer(siffra) innan jämförelse.
-    let currentUser = users.find(user => user.id === parseInt(currentUserId));
-    // Om en användare hittas kollar vi om highscore är lägre än antal drag som är kvar.
-    if (currentUser.highscore < oGameData.cardFlipsLeft){
-        currentUser.highscore = oGameData.cardFlipsLeft;
-        console.log(`New highscore = ${currentUser.highscore}`);
-        // Måste skriva raden nedan annars sparas inte nya poängen i objektet.
-        localStorage.setItem('users', JSON.stringify(users));
-    }
-} catch(error){
+
+    try {
+        // `currentUser` kommer från funktion som anropas vid login `setUser()`
+        let currentUserId = localStorage.getItem(`currentUser`);
+        // Ifall ingen är inloggad.
+        if(!currentUserId) {
+            return null;
+        }
+        let users = getUsers();
+        // Hittar objektet som har samma id som currentUserId och gör om det till en integer(siffra) innan jämförelse.
+        let currentUser = users.find(user => user.id === parseInt(currentUserId));
+        // Om en användare hittas kollar vi om highscore är lägre än antal drag som är kvar.
+        if (currentUser.highscore < oGameData.cardFlipsLeft){
+            currentUser.highscore = oGameData.cardFlipsLeft;
+            console.log(`New highscore = ${currentUser.highscore}`);
+            // Måste skriva raden nedan annars sparas inte nya poängen i objektet.
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+    } catch(error){
     console.log(error);
     return null;
-}
+      }
 }
 
 function gameDone () { 
+
     let isGameOver = oGameData.gameField.every(indexPosition => indexPosition === '');
 
     if (isGameOver || oGameData.cardFlipsLeft === 0) {
         let gamOver = document.querySelector(`.memory-container`);
         gamOver.innerHTML = ``;
+        document.querySelector(`.point-counter`).remove();
         let gameOverText = document.createElement(`h2`);
         if (isGameOver){
         checkHighScore ();
