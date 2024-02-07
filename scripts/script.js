@@ -49,7 +49,7 @@ function initPage() {
             });
         }
     })
-    // initContent()
+    initContent()
 }
 
 
@@ -251,8 +251,12 @@ function renderCards (cardSize, whatArray) {
         imgRef.classList.add(`card-photo`);
         imgRef.src = whatArray[i].Image;
         imgRef.alt = `Bild på ${whatArray[i].Name}`
-
-          
+        if (cardSize === `smallCard`) {
+            imgRef.classList.add(`card-photo-small`);
+        }
+        else if (cardSize === `bigCard`) {
+            imgRef.classList.add(`card-photo-big`);
+        }
         
         
         let captionRef = document.createElement(`figcaption`);
@@ -308,7 +312,11 @@ function logOut() {
     errorMsg.classList.remove(`d-none`);
     errorMsg.textContent = ``;
     document.querySelector(`#contentContainer`).innerHTML = ``
-    // Om man bara lägger till klassen d-none för att dölja logout-knappen vi skapat så skapar vi en ny varje gång vi loggar in och ut.
+    let pointCounter = document.querySelector(`.point-counter`);
+    if(pointCounter) {
+        pointCounter.remove();
+    }
+
     document.querySelector(`.logout-button`).classList.add(`d-none`);
     document.querySelector(`.memory-button`).classList.add(`d-none`);
     document.querySelector(`.back-button`).classList.add(`d-none`);

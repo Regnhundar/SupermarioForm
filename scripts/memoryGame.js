@@ -36,7 +36,6 @@ function memoryGame () {
     // Nu har vi två av varje objekt och kan alltså para ihop objekten i ett memoryspel. Vi skapar en tom array som ska hålla en slumpad ordning
     // av memorykorten.
     
-    let memoryArray = [];
     // För att blanda loopar vi igenom vår konkatenerade array. Så länge den innehåller ett kort fortsätter loopen.
     // Försökte först med en for loop men då varje varv förminskar combinedCharacters.length med 1 så behövde jag bestämma
     // exakt hur många varv som skulle loopas vilket inte blir skalbart.
@@ -44,23 +43,25 @@ function memoryGame () {
 
          let randomNumber = Math.floor(Math.random() * combinedCharacters.length);
          // Lägger ett random kort ur combinedCharacters på sista index position i memoryArray.
-         memoryArray.push(combinedCharacters[randomNumber]);
+         oGameData.memoryArray.push(combinedCharacters[randomNumber]);
          // Det kort som ligger på [randomNumber] i combinedCharacters arrayen tas bort. På så vis räknas loopen ned och säkerställer
          // att varje kort enbart placeras i memoryArray en gång. Andra siffran är hur många som ska bort och första siffran är vilken position vi börjar ta från.
          combinedCharacters.splice(randomNumber, 1);
      }
      // Vi skapar spelplanen genom att pusha namnen på objekten till oGameData.gameField i den ordning de förekommer i memoryArray.
-     for (let i = 0; i < memoryArray.length; i++) {
-        oGameData.gameField.push(memoryArray[i].Name);
+     for (let i = 0; i < oGameData.memoryArray.length; i++) {
+        oGameData.gameField.push(oGameData.memoryArray[i].Name);
      }
 
-        renderCards(`smallCard`, memoryArray);
+        renderCards(`smallCard`, oGameData.memoryArray);
     
 }
 
 let oGameData = {};
 
 function initGlobalObject () {
+
+    oGameData.memoryArray = [];
 
     oGameData.playerMove = 1; // Vilket kort man ska visa.
 
@@ -73,7 +74,7 @@ function initGlobalObject () {
 
 // whichCard är en siffra. Används för att hämta innehåll på index-position i andra arrayer. Se eventlyssnaren som anropar executeMove.
 function executeMove (whichCard) {
-
+console.log(oGameData.gameField);
     let clickedCard = document.querySelector(`#card${whichCard}`);
     let cardFlipCounter = document.querySelector(`.point-counter`);
     
@@ -104,6 +105,8 @@ function executeMove (whichCard) {
             if (oGameData.gameField[oGameData.cardCompare[0]] === oGameData.gameField[oGameData.cardCompare[1]]) {
                 console.log(`Andra kortet = ${oGameData.gameField[oGameData.cardCompare[1]]}`);
                 console.log(`Du har hittat ett par!`);
+                let abilityToRun = characters.find(card => card.Name === oGameData.gameField[oGameData.cardCompare[0]])
+                abilityToRun.Special();
                 oGameData.cardFlipsLeft--;
                 cardFlipCounter.textContent = oGameData.cardFlipsLeft;
                 oGameData.playerMove = 1;
