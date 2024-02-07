@@ -7,6 +7,9 @@ let characters = [
         Description : 'Mario, the legendary plumber in red, is the beloved hero of the Mushroom Kingdom. Renowned for his bravery and iconic mustache, he embarks on epic adventures, facing challenges to rescue Princess Peach from the villainous Bowser.',
         Color: `#ed0d11`,
         Special: function () {
+            // Om peach inte är matchad så får peach korten klassen peach (för CSS styling. Just nu växer korten något)
+            let peachFinder = oGameData.gameField.find(array => array === `Peach`);
+                if (peachFinder) {
                     let peachPositions = [];
                      for (let i = 0; i < oGameData.gameField.length; i++){
                          if (oGameData.gameField[i] === `Peach`) {
@@ -15,7 +18,7 @@ let characters = [
                      }
                      document.querySelector(`#card${peachPositions[0]}`).classList.add(`peach`)
                      document.querySelector(`#card${peachPositions[1]}`).classList.add(`peach`)
-                }
+                }}
     },
     {
         Name : 'Luigi',
@@ -42,7 +45,39 @@ let characters = [
         Image : 'https://upload.wikimedia.org/wikipedia/en/d/db/Yoshi_%28Nintendo_character%29.png',
         Description : `Yoshi, the friendly dinosaur companion to Mario, is known for his loyalty and unique abilities. With a colorful appearance and an appetite for almost anything, Yoshi adds charm and utility to the Mushroom Kingdom's ensemble.`,
         Color: `#3baa43`,
-        Special: function () { console.log(`Du hittade ${characters[3].Name}!`);}
+        Special: function () { 
+            // Om du matchar Yoshi så äter han upp ett par. (Dvs han matchar 2 kort åt dig.)
+            let cardToEat = ``;
+            for (let i = 0; i < oGameData.gameField.length; i++) {
+                if (oGameData.gameField[i] !== `Yoshi` && oGameData.gameField[i] !== `Birdo` && oGameData.gameField[i] !== undefined){
+                    cardToEat = oGameData.gameField[i];
+                    break;
+                }
+            }
+
+            let eatThis = [];
+
+            for (let i = 0; i < oGameData.gameField.length; i++){
+                if (oGameData.gameField[i] === cardToEat) {
+                    eatThis.push(i);
+                }
+            }
+
+            let firstCard = document.querySelector(`#card${eatThis[0]}`);
+            firstCard.classList.add(`d-none`);
+            firstCard.nextElementSibling.classList.remove(`d-none`);
+            firstCard.nextElementSibling.classList.add(`matched`);
+
+
+            let secondCard = document.querySelector(`#card${eatThis[1]}`);
+            secondCard.classList.add(`d-none`);
+            secondCard.nextElementSibling.classList.remove(`d-none`);
+            setTimeout(() => {
+                secondCard.nextElementSibling.classList.add(`matched`);
+            },50);
+            delete oGameData.gameField[eatThis[0]];
+            delete oGameData.gameField[eatThis[1]];
+        }
     },
     {
         Name : 'Bowser',
@@ -87,7 +122,10 @@ let characters = [
         Image : 'https://upload.wikimedia.org/wikipedia/en/4/46/Waluigi.png',
         Description : 'Will shuffle the board once matched.',
         Color: `rgb(146 88 228)`,
-        Special: function () { }
+        Special: function () {
+            console.log(`Du hittade ${characters[7].Name}!`)
+
+        }
     },    
     {
         Name : 'Daisy',
