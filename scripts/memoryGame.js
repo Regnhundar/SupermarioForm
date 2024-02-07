@@ -39,7 +39,7 @@ function memoryGame () {
     // För att blanda loopar vi igenom vår konkatenerade array. Så länge den innehåller ett kort fortsätter loopen.
     // Försökte först med en for loop men då varje varv förminskar combinedCharacters.length med 1 så behövde jag bestämma
     // exakt hur många varv som skulle loopas vilket inte blir skalbart.
-     while(combinedCharacters.length > 0) {
+     while (combinedCharacters.length > 0) {
 
          let randomNumber = Math.floor(Math.random() * combinedCharacters.length);
          // Lägger ett random kort ur combinedCharacters på sista index position i memoryArray.
