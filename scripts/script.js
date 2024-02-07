@@ -2,7 +2,7 @@
 
 window.addEventListener(`load`,() => {
     initPage();
-    initContent()
+
 })
 
 function initPage() {
@@ -14,22 +14,26 @@ function initPage() {
     backButtonRef.textContent = `Tillbaka`;
     backButtonRef.addEventListener(`click`, () => {
         document.querySelector(`#contentContainer`).innerHTML = ``;
-        initContent(1);
+        initContent();
     });
+
     backButtonRef.classList.add(`back-button`, `d-none`);
-    document.querySelector(`.form-container`).prepend(backButtonRef);
+    document.querySelector(`#jumbotron`).appendChild(backButtonRef);
+
+    let jumbotron = document.querySelector(`#jumbotron`);
+    jumbotron.classList.add(`jumbotron`);
 
     let memoryButtonRef = document.createElement(`button`);
     memoryButtonRef.textContent = `Memory`;
     memoryButtonRef.addEventListener(`click`, memoryGame);
     memoryButtonRef.classList.add(`memory-button`, `d-none`);
-    document.querySelector(`.form-container`).appendChild(memoryButtonRef);
+    jumbotron.appendChild(memoryButtonRef);
 
     let logoutButtonRef = document.createElement(`button`);
     logoutButtonRef.textContent = `Logga ut`;
     logoutButtonRef.addEventListener(`click`, logOut);
     logoutButtonRef.classList.add(`logout-button`, `d-none`);
-    document.querySelector(`.form-container`).appendChild(logoutButtonRef);
+    jumbotron.appendChild(logoutButtonRef);
 
     // Gör en forEach loop på alla knappar i #loginForm. Beroende på knappens textContent läggs en av lyssnarna på knappen.
     document.querySelectorAll(`#loginForm button`).forEach(addClick =>{
@@ -43,16 +47,15 @@ function initPage() {
                 document.querySelector(`#registerForm`).classList.remove(`d-none`);
                 document.querySelector(`#loginForm`).classList.add(`d-none`);
             });
-
         }
     })
-    // initContent()
+    initContent()
 }
 
 
 
 
-function validateLogin() {
+function validateLogin(event) {
    
 try {  
     event.preventDefault();
@@ -190,9 +193,23 @@ function addUser(userName, userPassword) {
 }
 
 function initContent() {
+    // Då querySelectorAll returnerar en node vilket är ungefär som en array så behöver vi loopa igenom varje input i .form-container
+    // för att rensa vad de har som value. Dvs användarnamn och password.
+    document.querySelectorAll('.form-container input').forEach(input => {
+        input.value = '';
+      });
     let errorMsg = document.querySelector(`#errorMsg`);
     errorMsg.textContent = ``;
     errorMsg.classList.add(`d-none`);
+    let pointsCounter = document.querySelector(`.point-counter`)
+    if (pointsCounter) {
+        pointsCounter.remove();
+    }
+    let jumbotron = document.querySelector(`#jumbotron`);
+    jumbotron.classList.remove(`d-none`);
+
+    
+    
     document.querySelector(`#contentContainer`).classList.add(`content-container`);
     document.querySelector(`#contentContainer`).classList.remove(`memory-container`);
     document.querySelector(`#loginForm`).classList.add(`d-none`);
@@ -234,8 +251,12 @@ function renderCards (cardSize, whatArray) {
         imgRef.classList.add(`card-photo`);
         imgRef.src = whatArray[i].Image;
         imgRef.alt = `Bild på ${whatArray[i].Name}`
-
-          
+        if (cardSize === `smallCard`) {
+            imgRef.classList.add(`card-photo-small`);
+        }
+        else if (cardSize === `bigCard`) {
+            imgRef.classList.add(`card-photo-big`);
+        }
         
         
         let captionRef = document.createElement(`figcaption`);
@@ -291,15 +312,14 @@ function logOut() {
     errorMsg.classList.remove(`d-none`);
     errorMsg.textContent = ``;
     document.querySelector(`#contentContainer`).innerHTML = ``
-    // Om man bara lägger till klassen d-none för att dölja logout-knappen vi skapat så skapar vi en ny varje gång vi loggar in och ut.
+    let pointCounter = document.querySelector(`.point-counter`);
+    if(pointCounter) {
+        pointCounter.remove();
+    }
+
     document.querySelector(`.logout-button`).classList.add(`d-none`);
     document.querySelector(`.memory-button`).classList.add(`d-none`);
     document.querySelector(`.back-button`).classList.add(`d-none`);
     document.querySelector(`#loginForm`).classList.remove(`d-none`);
-    // Då querySelectorAll returnerar en node vilket är ungefär som en array så behöver vi loopa igenom varje input i .form-container
-    // för att rensa vad de har som value. Dvs användarnamn och password.
-    document.querySelectorAll('.form-container input').forEach(input => {
-        input.value = '';
-      });
 
 }
