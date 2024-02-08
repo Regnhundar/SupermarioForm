@@ -48,35 +48,43 @@ let characters = [
         Special: function () { 
             // Om du matchar Yoshi så äter han upp ett par. (Dvs han matchar 2 kort åt dig.)
             let cardToEat = ``;
+            let yoshiEats = false;
+
             for (let i = 0; i < oGameData.gameField.length; i++) {
-                if (oGameData.gameField[i] !== `Yoshi` && oGameData.gameField[i] !== `Birdo` && oGameData.gameField[i] !== undefined){
+                if (oGameData.gameField[i] !== `Yoshi` && oGameData.gameField[i] !== `Birdo` && oGameData.gameField[i] !== null){
                     cardToEat = oGameData.gameField[i];
+                    yoshiEats = true;
                     break;
                 }
             }
+            if (yoshiEats === true) {
+                let eatThis = [];
 
-            let eatThis = [];
-
-            for (let i = 0; i < oGameData.gameField.length; i++){
-                if (oGameData.gameField[i] === cardToEat) {
-                    eatThis.push(i);
+                for (let i = 0; i < oGameData.gameField.length; i++){
+                    if (oGameData.gameField[i] === cardToEat) {
+                        eatThis.push(i);
+                    }
                 }
+
+                let firstCard = document.querySelector(`#card${eatThis[0]}`);
+                firstCard.classList.add(`d-none`);
+                firstCard.nextElementSibling.style.boxShadow  = ``;
+                firstCard.nextElementSibling.classList.remove(`d-none`);
+                firstCard.nextElementSibling.classList.add(`matched`);
+
+
+                let secondCard = document.querySelector(`#card${eatThis[1]}`);
+                secondCard.classList.add(`d-none`);
+                secondCard.nextElementSibling.style.boxShadow  = ``;
+                secondCard.nextElementSibling.classList.remove(`d-none`);
+                setTimeout(() => {
+                    secondCard.nextElementSibling.classList.add(`matched`);
+                },50);
+                oGameData.gameField[eatThis[0]] = null;
+                oGameData.gameField[eatThis[1]] = null;
+                yoshiEats = false;
             }
-
-            let firstCard = document.querySelector(`#card${eatThis[0]}`);
-            firstCard.classList.add(`d-none`);
-            firstCard.nextElementSibling.classList.remove(`d-none`);
-            firstCard.nextElementSibling.classList.add(`matched`);
-
-
-            let secondCard = document.querySelector(`#card${eatThis[1]}`);
-            secondCard.classList.add(`d-none`);
-            secondCard.nextElementSibling.classList.remove(`d-none`);
-            setTimeout(() => {
-                secondCard.nextElementSibling.classList.add(`matched`);
-            },50);
-            delete oGameData.gameField[eatThis[0]];
-            delete oGameData.gameField[eatThis[1]];
+            console.log(`Yoshi ate ${cardToEat}`);
         }
     },
     {
@@ -123,10 +131,34 @@ let characters = [
         Description : 'Will shuffle the board once matched.',
         Color: `rgb(146 88 228)`,
         Special: function () {
-            console.log(`Du hittade ${characters[7].Name}!`)
 
+            let matchedCardsIndexNumbers = [];
+            let cardsToMove = [];
+
+            for (let i = 0; i < oGameData.gameField.length; i++) {
+                if (oGameData.gameField[i] === null){
+                    matchedCardsIndexNumbers.push(i)
+                }
+            }
+            for (let j = 0; j<oGameData.gameField.length; j++) {
+                if (!matchedCardsIndexNumbers.includes(j)) {
+                    cardsToMove.push(j); 
+                }
+            }
+
+            for (let y = 0; y < cardsToMove.length; y++) {
+                let cardToMove = document.querySelector(`#cardContainer${cardsToMove[y]}`)
+                let randomCardIndex = Math.floor(Math.random()*cardsToMove.length);
+                let randomCard = document.querySelector(`#cardContainer${cardsToMove[randomCardIndex]}`);
+                let memoryContainer = document.querySelector(`#contentContainer`);
+
+                memoryContainer.insertBefore(cardToMove, randomCard);
+
+            }
+            /* `Vill flytta på alla cardContainer${SIFFRA} som förekommer i cardsToMove. Sedan uppdatera oGameData.gameField till den nya spelplanen` */
         }
-    },    
+    }
+    ,    
     {
         Name : 'Daisy',
         Age : '23',
@@ -155,3 +187,6 @@ let characters = [
 
     
 ];
+
+// let abilityToRun = characters.find(card => card.Name === `Waluigi`);
+// abilityToRun.Special();

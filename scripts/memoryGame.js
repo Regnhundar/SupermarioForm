@@ -1,3 +1,18 @@
+let oGameData = {};
+
+function initGlobalObject () {
+
+    oGameData.memoryArray = [];
+
+    oGameData.playerMove = 1; // Vilket kort man ska visa.
+
+    oGameData.cardFlipsLeft = 100; // Hur många drag man har kvar.
+
+    oGameData.gameField = [];
+
+    oGameData.cardCompare = [];
+}
+
 function memoryGame () {
 
     // Initierar det globala objektet som håller informationen om spelet.
@@ -54,23 +69,11 @@ function memoryGame () {
      }
 
         renderCards(`smallCard`, oGameData.memoryArray);
+        
     
 }
 
-let oGameData = {};
 
-function initGlobalObject () {
-
-    oGameData.memoryArray = [];
-
-    oGameData.playerMove = 1; // Vilket kort man ska visa.
-
-    oGameData.cardFlipsLeft = 100; // Hur många drag man har kvar.
-
-    oGameData.gameField = [];
-
-    oGameData.cardCompare = [];
-}
 
 // whichCard är en siffra. Används för att hämta innehåll på index-position i andra arrayer. Se eventlyssnaren som anropar executeMove.
 function executeMove (whichCard) {
@@ -78,7 +81,7 @@ console.log(oGameData.gameField);
     let clickedCard = document.querySelector(`#card${whichCard}`);
     let cardFlipCounter = document.querySelector(`.point-counter`);
     
-    if (oGameData.playerMove === 1 && oGameData.gameField[whichCard] !== undefined && oGameData.cardCompare.length === 0) {
+    if (oGameData.playerMove === 1 && oGameData.gameField[whichCard] !== null && oGameData.cardCompare.length === 0) {
 
         oGameData.cardCompare.push(whichCard);
         clickedCard.classList.add(`d-none`);
@@ -93,7 +96,7 @@ console.log(oGameData.gameField);
    
     }
 
-    else if (oGameData.playerMove === 2 && oGameData.gameField[whichCard] !== undefined && oGameData.cardCompare.length === 1) {
+    else if (oGameData.playerMove === 2 && oGameData.gameField[whichCard] !== null && oGameData.cardCompare.length === 1) {
 
         if (!oGameData.cardCompare.includes(whichCard)) {
 
@@ -105,14 +108,14 @@ console.log(oGameData.gameField);
             if (oGameData.gameField[oGameData.cardCompare[0]] === oGameData.gameField[oGameData.cardCompare[1]]) {
                 console.log(`Andra kortet = ${oGameData.gameField[oGameData.cardCompare[1]]}`);
                 console.log(`Du har hittat ett par!`);
-                let abilityToRun = characters.find(card => card.Name === oGameData.gameField[oGameData.cardCompare[0]])
-                abilityToRun.Special();
+                let matchedCharacter = oGameData.gameField[oGameData.cardCompare[0]];
                 oGameData.cardFlipsLeft--;
                 cardFlipCounter.textContent = oGameData.cardFlipsLeft;
                 oGameData.playerMove = 1;
-                delete oGameData.gameField[oGameData.cardCompare[0]];
-                delete oGameData.gameField[oGameData.cardCompare[1]];
-
+                oGameData.gameField[oGameData.cardCompare[0]] = null;
+                oGameData.gameField[oGameData.cardCompare[1]] = null;
+                let abilityToRun = characters.find(card => card.Name === matchedCharacter);
+                abilityToRun.Special();
                 let matchedOne = document.querySelector(`#card${[oGameData.cardCompare[0]]}`).nextElementSibling;
                 matchedOne.classList.add(`matched`);
                 matchedOne.style.boxShadow  = ``;
@@ -174,7 +177,7 @@ function checkHighScore () {
 
 function gameDone () { 
 
-    let isGameOver = oGameData.gameField.every(indexPosition => indexPosition === '');
+    let isGameOver = oGameData.gameField.every(indexPosition => indexPosition === null);
 
     if (isGameOver || oGameData.cardFlipsLeft === 0) {
         let gamOver = document.querySelector(`.memory-container`);
