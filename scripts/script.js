@@ -2,7 +2,7 @@
 
 window.addEventListener(`load`,() => {
     initPage();
-
+    initGlobalObject ()
 })
 
 function initPage() {
@@ -222,6 +222,7 @@ function initContent() {
 }
 
 function renderCards (cardSize, whatArray) {
+
     let mainContainerRef = document.querySelector(`#contentContainer`);
 
     for (let i = 0; i < whatArray.length; i++){
@@ -233,6 +234,7 @@ function renderCards (cardSize, whatArray) {
         if (cardSize === `smallCard`){
             let cardContainerRef = document.createElement(`div`);
             cardContainerRef.id = `cardContainer${i}`;
+            cardContainerRef.classList.add(`cardContainer`)
 
             let backOfCardRef = document.createElement(`figure`);
             backOfCardRef.classList.add(`back-of-card`);
@@ -241,10 +243,18 @@ function renderCards (cardSize, whatArray) {
             mainContainerRef.appendChild(cardContainerRef);
             backOfCardRef.id = `card${[i]}`;
             frontOfCardRef.classList.add(`d-none`, `small-card`);            
-            backOfCardRef.addEventListener(`click`, () => {
+            if (oGameData.debug === false) {
+                backOfCardRef.addEventListener(`click`, () => {
                 let cardNumber = i;
                 executeMove(cardNumber)
             });
+            }
+            else if (oGameData.debug === true){
+                cardContainerRef.addEventListener(`click`, () => {
+                    let cardNumber = i;
+                    executeMove(cardNumber)
+                });
+            }
 
         }
         else {

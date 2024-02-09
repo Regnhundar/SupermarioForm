@@ -132,31 +132,55 @@ let characters = [
         Color: `rgb(146 88 228)`,
         Special: function () {
 
-            let matchedCardsIndexNumbers = [];
-            let cardsToMove = [];
-
+            let cardsToMove = []; 
+            let originalPositions = []; 
+        
             for (let i = 0; i < oGameData.gameField.length; i++) {
-                if (oGameData.gameField[i] === null){
-                    matchedCardsIndexNumbers.push(i)
+                if (oGameData.gameField[i] !== null) {
+                    cardsToMove.push(i)
                 }
             }
-            for (let j = 0; j<oGameData.gameField.length; j++) {
-                if (!matchedCardsIndexNumbers.includes(j)) {
-                    cardsToMove.push(j); 
-                }
-            }
+    
 
-            for (let y = 0; y < cardsToMove.length; y++) {
-                let cardToMove = document.querySelector(`#cardContainer${cardsToMove[y]}`)
+            for (let k = 0; k < cardsToMove.length; k++) {
+                    originalPositions.push(cardsToMove[k]+1);
+            }
+           
+        
+            for (let j = 0; j < cardsToMove.length; j++) {
+        
+                let cardToMove = document.querySelector(`#cardContainer${cardsToMove[j]}`);
+                let cardToMovePlusOne = document.querySelector(`#cardContainer${originalPositions[j]}`);
                 let randomCardIndex = Math.floor(Math.random()*cardsToMove.length);
                 let randomCard = document.querySelector(`#cardContainer${cardsToMove[randomCardIndex]}`);
                 let memoryContainer = document.querySelector(`#contentContainer`);
-
+                                // Exempel:   flytta 0   släpp före 7
                 memoryContainer.insertBefore(cardToMove, randomCard);
+                                // Exempel:   flytta 7   släpp före 1
+                memoryContainer.insertBefore(randomCard, cardToMovePlusOne);
+            }
+            const container = document.querySelector('#contentContainer'); // Replace with your container ID
+            const numbers = [];
+
+            for (const card of container.querySelectorAll('.cardContainer')) {
+                 const match = card.id.match(/\d+/); // Extract the number using regular expression
+                 if (match) {
+                 numbers.push(parseInt(match[0])); // Convert the string to integer
+                 }
+            }
+            let newGameField = [];
+            for (let g = 0; g<oGameData.memoryArray.length; g++){
+                if (!oGameData.gameField.includes(oGameData.memoryArray[numbers[g]].Name)){
+                    newGameField.push(null)
+                } else{
+                    newGameField.push(oGameData.memoryArray[numbers[g]].Name);
+                }
 
             }
-            /* `Vill flytta på alla cardContainer${SIFFRA} som förekommer i cardsToMove. Sedan uppdatera oGameData.gameField till den nya spelplanen` */
+            // oGameData.gameField = newGameField;
         }
+
+
     }
     ,    
     {

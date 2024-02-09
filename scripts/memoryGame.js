@@ -1,6 +1,7 @@
 let oGameData = {};
 
 function initGlobalObject () {
+    oGameData.debug = false;
 
     oGameData.memoryArray = [];
 
@@ -11,12 +12,20 @@ function initGlobalObject () {
     oGameData.gameField = [];
 
     oGameData.cardCompare = [];
+
 }
 
+// Anropas genom att sätta oGameData.debug = true;
+function hackGame () {
+    document.querySelectorAll(`.back-of-card`).forEach(backOfCard => backOfCard.classList.add(`d-none`));
+    document.querySelectorAll(`.card`).forEach(backOfCard => backOfCard.classList.remove(`d-none`))
+}
+  
 function memoryGame () {
 
     // Initierar det globala objektet som håller informationen om spelet.
     initGlobalObject ();
+
     // Skapar en variabel för spelbrädet och tömmer sedan brädet på sitt innehåll.
     // Tar bort klassen för content-container och sätter istället klassen memory-container för att byta styling i css.
 
@@ -67,10 +76,12 @@ function memoryGame () {
      for (let i = 0; i < oGameData.memoryArray.length; i++) {
         oGameData.gameField.push(oGameData.memoryArray[i].Name);
      }
-
-        renderCards(`smallCard`, oGameData.memoryArray);
         
-    
+        renderCards(`smallCard`, oGameData.memoryArray);
+
+        if (oGameData.debug === true) {
+            hackGame ()
+        }
 }
 
 
@@ -114,8 +125,7 @@ console.log(oGameData.gameField);
                 oGameData.playerMove = 1;
                 oGameData.gameField[oGameData.cardCompare[0]] = null;
                 oGameData.gameField[oGameData.cardCompare[1]] = null;
-                let abilityToRun = characters.find(card => card.Name === matchedCharacter);
-                abilityToRun.Special();
+
                 let matchedOne = document.querySelector(`#card${[oGameData.cardCompare[0]]}`).nextElementSibling;
                 matchedOne.classList.add(`matched`);
                 matchedOne.style.boxShadow  = ``;
@@ -126,6 +136,15 @@ console.log(oGameData.gameField);
                 setTimeout(() => {
                     matchedTwo.classList.add(`matched`)
                 },50);
+                const memoryContainer = document.querySelector('#contentContainer');
+                let abilityToRun = characters.find(card => card.Name === matchedCharacter);
+                if (matchedCharacter === `Waluigi`){
+                    console.log("oGameData.gameField before:", oGameData.gameField);
+                    abilityToRun.Special(memoryContainer)
+                } else { 
+                    abilityToRun.Special();
+                  }
+                
                 oGameData.cardCompare = [];
                 
             }
