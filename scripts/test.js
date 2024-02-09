@@ -1,6 +1,16 @@
 
 // Waluigi
 
+//anropet 
+// const memoryContainer = document.querySelector('#contentContainer');
+// let abilityToRun = characters.find(card => card.Name === matchedCharacter);
+// if (matchedCharacter === `Waluigi`){
+//     console.log("oGameData.gameField before:", oGameData.gameField);
+//     abilityToRun.Special(memoryContainer)
+// } else { 
+//     abilityToRun.Special();
+//   }
+
 
 // Special: function (memoryContainer) {
 //     console.log(`Shuffle!`);

@@ -88,7 +88,7 @@ function memoryGame () {
 
 // whichCard är en siffra. Används för att hämta innehåll på index-position i andra arrayer. Se eventlyssnaren som anropar executeMove.
 function executeMove (whichCard) {
-console.log(oGameData.gameField);
+
     let clickedCard = document.querySelector(`#card${whichCard}`);
     let cardFlipCounter = document.querySelector(`.point-counter`);
     
@@ -136,14 +136,12 @@ console.log(oGameData.gameField);
                 setTimeout(() => {
                     matchedTwo.classList.add(`matched`)
                 },50);
-                const memoryContainer = document.querySelector('#contentContainer');
+
                 let abilityToRun = characters.find(card => card.Name === matchedCharacter);
-                if (matchedCharacter === `Waluigi`){
-                    console.log("oGameData.gameField before:", oGameData.gameField);
-                    abilityToRun.Special(memoryContainer)
-                } else { 
-                    abilityToRun.Special();
-                  }
+
+                abilityToRun.Special();
+                  
+                console.log(oGameData.gameField);
                 
                 oGameData.cardCompare = [];
                 

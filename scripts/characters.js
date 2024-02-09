@@ -131,7 +131,7 @@ let characters = [
         Description : 'Will shuffle the board once matched.',
         Color: `rgb(146 88 228)`,
         Special: function () {
-
+            
             let cardsToMove = []; 
             let originalPositions = []; 
         
@@ -177,6 +177,7 @@ let characters = [
                 }
 
             }
+            console.log(`oGameData.gameField efter Waluigi: ${oGameData.gameField}`);
             // oGameData.gameField = newGameField;
         }
 
