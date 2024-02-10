@@ -1,7 +1,31 @@
+let oGameData = {};
+
+function initGlobalObject () {
+    oGameData.debug = false;
+
+    oGameData.memoryArray = [];
+
+    oGameData.playerMove = 1; // Vilket kort man ska visa.
+
+    oGameData.cardFlipsLeft = 100; // Hur många drag man har kvar.
+
+    oGameData.gameField = [];
+
+    oGameData.cardCompare = [];
+
+}
+
+// Anropas genom att sätta oGameData.debug = true;
+function hackGame () {
+    document.querySelectorAll(`.back-of-card`).forEach(backOfCard => backOfCard.classList.add(`d-none`));
+    document.querySelectorAll(`.card`).forEach(backOfCard => backOfCard.classList.remove(`d-none`))
+}
+  
 function memoryGame () {
 
     // Initierar det globala objektet som håller informationen om spelet.
     initGlobalObject ();
+
     // Skapar en variabel för spelbrädet och tömmer sedan brädet på sitt innehåll.
     // Tar bort klassen för content-container och sätter istället klassen memory-container för att byta styling i css.
 
@@ -39,7 +63,7 @@ function memoryGame () {
     // För att blanda loopar vi igenom vår konkatenerade array. Så länge den innehåller ett kort fortsätter loopen.
     // Försökte först med en for loop men då varje varv förminskar combinedCharacters.length med 1 så behövde jag bestämma
     // exakt hur många varv som skulle loopas vilket inte blir skalbart.
-     while(combinedCharacters.length > 0) {
+     while (combinedCharacters.length > 0) {
 
          let randomNumber = Math.floor(Math.random() * combinedCharacters.length);
          // Lägger ett random kort ur combinedCharacters på sista index position i memoryArray.
@@ -52,48 +76,43 @@ function memoryGame () {
      for (let i = 0; i < oGameData.memoryArray.length; i++) {
         oGameData.gameField.push(oGameData.memoryArray[i].Name);
      }
-
+        
         renderCards(`smallCard`, oGameData.memoryArray);
-    
+
+        if (oGameData.debug === true) {
+            hackGame ()
+        }
 }
 
-let oGameData = {};
 
-function initGlobalObject () {
-
-    oGameData.memoryArray = [];
-
-    oGameData.playerMove = 1; // Vilket kort man ska visa.
-
-    oGameData.cardFlipsLeft = 100; // Hur många drag man har kvar.
-
-    oGameData.gameField = [];
-
-    oGameData.cardCompare = [];
-}
 
 // whichCard är en siffra. Används för att hämta innehåll på index-position i andra arrayer. Se eventlyssnaren som anropar executeMove.
 function executeMove (whichCard) {
-console.log(oGameData.gameField);
+    let onFirstFlip = [`Bowser`];
+    let onFirstFlipCheck = onFirstFlip.includes(oGameData.gameField[whichCard])
     let clickedCard = document.querySelector(`#card${whichCard}`);
     let cardFlipCounter = document.querySelector(`.point-counter`);
     
-    if (oGameData.playerMove === 1 && oGameData.gameField[whichCard] !== undefined && oGameData.cardCompare.length === 0) {
+    if (oGameData.playerMove === 1 && oGameData.gameField[whichCard] !== null && oGameData.cardCompare.length === 0) {
 
         oGameData.cardCompare.push(whichCard);
         clickedCard.classList.add(`d-none`);
         clickedCard.nextElementSibling.classList.remove(`d-none`);
 
         console.log(`Första kortet = ${oGameData.gameField[oGameData.cardCompare[0]]}`);
-        
-
+        console.log(oGameData.gameField)
+    
         oGameData.playerMove = 2;
         oGameData.cardFlipsLeft--;
         cardFlipCounter.textContent = oGameData.cardFlipsLeft;
+        if(onFirstFlipCheck) {
+            console.log(onFirstFlipCheck);
+            characters.find(card => card.Name === oGameData.gameField[whichCard]).Special();
+        }
    
     }
 
-    else if (oGameData.playerMove === 2 && oGameData.gameField[whichCard] !== undefined && oGameData.cardCompare.length === 1) {
+    else if (oGameData.playerMove === 2 && oGameData.gameField[whichCard] !== null && oGameData.cardCompare.length === 1) {
 
         if (!oGameData.cardCompare.includes(whichCard)) {
 
@@ -105,13 +124,12 @@ console.log(oGameData.gameField);
             if (oGameData.gameField[oGameData.cardCompare[0]] === oGameData.gameField[oGameData.cardCompare[1]]) {
                 console.log(`Andra kortet = ${oGameData.gameField[oGameData.cardCompare[1]]}`);
                 console.log(`Du har hittat ett par!`);
-                let abilityToRun = characters.find(card => card.Name === oGameData.gameField[oGameData.cardCompare[0]])
-                abilityToRun.Special();
+                let matchedName = oGameData.gameField[oGameData.cardCompare[1]];
                 oGameData.cardFlipsLeft--;
                 cardFlipCounter.textContent = oGameData.cardFlipsLeft;
                 oGameData.playerMove = 1;
-                delete oGameData.gameField[oGameData.cardCompare[0]];
-                delete oGameData.gameField[oGameData.cardCompare[1]];
+                oGameData.gameField[oGameData.cardCompare[0]] = null;
+                oGameData.gameField[oGameData.cardCompare[1]] = null;
 
                 let matchedOne = document.querySelector(`#card${[oGameData.cardCompare[0]]}`).nextElementSibling;
                 matchedOne.classList.add(`matched`);
@@ -123,6 +141,12 @@ console.log(oGameData.gameField);
                 setTimeout(() => {
                     matchedTwo.classList.add(`matched`)
                 },50);
+
+
+                if(!onFirstFlipCheck) {
+                    console.log(onFirstFlipCheck);
+                    characters.find(card => card.Name === matchedName).Special();
+                }
                 oGameData.cardCompare = [];
                 
             }
@@ -133,7 +157,9 @@ console.log(oGameData.gameField);
                 cardFlipCounter.textContent = oGameData.cardFlipsLeft;
                 oGameData.playerMove = 1;
 
-                
+                if(onFirstFlipCheck) {
+                    characters.find(card => card.Name === oGameData.gameField[whichCard]).Special();
+                }
                 setTimeout(() => {
                     document.querySelector(`#card${oGameData.cardCompare[0]}`).classList.remove(`d-none`);
                     document.querySelector(`#card${oGameData.cardCompare[0]}`).nextElementSibling.classList.add(`d-none`)
@@ -174,7 +200,7 @@ function checkHighScore () {
 
 function gameDone () { 
 
-    let isGameOver = oGameData.gameField.every(indexPosition => indexPosition === '');
+    let isGameOver = oGameData.gameField.every(indexPosition => indexPosition === null);
 
     if (isGameOver || oGameData.cardFlipsLeft === 0) {
         let gamOver = document.querySelector(`.memory-container`);

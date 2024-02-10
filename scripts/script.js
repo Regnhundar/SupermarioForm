@@ -2,7 +2,7 @@
 
 window.addEventListener(`load`,() => {
     initPage();
-
+    initGlobalObject ()
 })
 
 function initPage() {
@@ -222,30 +222,43 @@ function initContent() {
 }
 
 function renderCards (cardSize, whatArray) {
+
     let mainContainerRef = document.querySelector(`#contentContainer`);
 
     for (let i = 0; i < whatArray.length; i++){
 
-        let cardContainerRef = document.createElement(`figure`);
-        cardContainerRef.classList.add(`card`);
+        let frontOfCardRef = document.createElement(`figure`);
+        frontOfCardRef.classList.add(`card`);
         
 
         if (cardSize === `smallCard`){
+            let cardContainerRef = document.createElement(`div`);
+            cardContainerRef.id = `cardContainer${i}`;
+            cardContainerRef.classList.add(`cardContainer`)
 
             let backOfCardRef = document.createElement(`figure`);
             backOfCardRef.classList.add(`back-of-card`);
-            mainContainerRef.appendChild(backOfCardRef);
+            cardContainerRef.appendChild(backOfCardRef);
+            cardContainerRef.appendChild(frontOfCardRef);
+            mainContainerRef.appendChild(cardContainerRef);
             backOfCardRef.id = `card${[i]}`;
-
-            cardContainerRef.classList.add(`d-none`, `small-card`);            
-
-
-            backOfCardRef.addEventListener(`click`, () => {
+            frontOfCardRef.classList.add(`d-none`, `small-card`);            
+            if (oGameData.debug === false) {
+                backOfCardRef.addEventListener(`click`, () => {
                 let cardNumber = i;
                 executeMove(cardNumber)
             });
+            }
+            else if (oGameData.debug === true){
+                cardContainerRef.addEventListener(`click`, () => {
+                    let cardNumber = i;
+                    executeMove(cardNumber)
+                });
+            }
+
         }
-        mainContainerRef.appendChild(cardContainerRef);
+        else {
+        mainContainerRef.appendChild(frontOfCardRef);}
         
         let imgRef = document.createElement(`img`);
         imgRef.classList.add(`card-photo`);
@@ -261,23 +274,23 @@ function renderCards (cardSize, whatArray) {
         
         let captionRef = document.createElement(`figcaption`);
         if(cardSize === `bigCard`) {
-            cardContainerRef.classList.add(`big`);
+            frontOfCardRef.classList.add(`big`);
         // Fungerar på samma vis som css :hover men vi baserar bakgrundsfärgen på färgen som står i objektet under Color.
-        cardContainerRef.addEventListener('mouseenter', function () {
-            cardContainerRef.style.boxShadow = `2px 2px 20px ${whatArray[i].Color}`;
+        frontOfCardRef.addEventListener('mouseenter', function () {
+            frontOfCardRef.style.boxShadow = `2px 2px 20px ${whatArray[i].Color}`;
           });
         // Värdet sätts när musen pekar på kortet och stannar kvar efter musen lämnar om man inte rensar det med ny eventlistener.
-          cardContainerRef.addEventListener('mouseleave', function () {
-            cardContainerRef.style.boxShadow = ``;
+          frontOfCardRef.addEventListener('mouseleave', function () {
+            frontOfCardRef.style.boxShadow = ``;
           });
             captionRef.classList.add(`caption-container-big`);
         }
         else if (cardSize === `smallCard`) {
-            cardContainerRef.style.boxShadow = `0px 0px 20px ${whatArray[i].Color}`;
+            frontOfCardRef.style.boxShadow = `0px 0px 20px ${whatArray[i].Color}`;
             captionRef.classList.add(`caption-container-small`);
         }
-        cardContainerRef.appendChild(imgRef);
-        cardContainerRef.appendChild(captionRef);
+        frontOfCardRef.appendChild(imgRef);
+        frontOfCardRef.appendChild(captionRef);
 
         let cardName = document.createElement(`h3`);
         cardName.classList.add(`card-header`);
