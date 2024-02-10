@@ -178,7 +178,7 @@ let characters = [
 
             }
             console.log(`oGameData.gameField efter Waluigi: ${oGameData.gameField}`);
-            // oGameData.gameField = newGameField;
+            oGameData.gameField = newGameField;
         }
 
 
