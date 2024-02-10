@@ -1,7 +1,7 @@
 let oGameData = {};
 
 function initGlobalObject () {
-    oGameData.debug = false;
+    oGameData.debug = true;
 
     oGameData.memoryArray = [];
 
@@ -88,7 +88,8 @@ function memoryGame () {
 
 // whichCard är en siffra. Används för att hämta innehåll på index-position i andra arrayer. Se eventlyssnaren som anropar executeMove.
 function executeMove (whichCard) {
-
+    let onFirstFlip = [`Bowser`];
+    let onFirstFlipCheck = onFirstFlip.includes(oGameData.gameField[whichCard])
     let clickedCard = document.querySelector(`#card${whichCard}`);
     let cardFlipCounter = document.querySelector(`.point-counter`);
     
@@ -99,11 +100,15 @@ function executeMove (whichCard) {
         clickedCard.nextElementSibling.classList.remove(`d-none`);
 
         console.log(`Första kortet = ${oGameData.gameField[oGameData.cardCompare[0]]}`);
-        
-
+        console.log(oGameData.gameField)
+    
         oGameData.playerMove = 2;
         oGameData.cardFlipsLeft--;
         cardFlipCounter.textContent = oGameData.cardFlipsLeft;
+        if(onFirstFlipCheck) {
+            console.log(onFirstFlipCheck);
+            characters.find(card => card.Name === oGameData.gameField[whichCard]).Special();
+        }
    
     }
 
@@ -119,7 +124,7 @@ function executeMove (whichCard) {
             if (oGameData.gameField[oGameData.cardCompare[0]] === oGameData.gameField[oGameData.cardCompare[1]]) {
                 console.log(`Andra kortet = ${oGameData.gameField[oGameData.cardCompare[1]]}`);
                 console.log(`Du har hittat ett par!`);
-                let matchedCharacter = oGameData.gameField[oGameData.cardCompare[0]];
+                let matchedName = oGameData.gameField[oGameData.cardCompare[1]];
                 oGameData.cardFlipsLeft--;
                 cardFlipCounter.textContent = oGameData.cardFlipsLeft;
                 oGameData.playerMove = 1;
@@ -137,12 +142,11 @@ function executeMove (whichCard) {
                     matchedTwo.classList.add(`matched`)
                 },50);
 
-                let abilityToRun = characters.find(card => card.Name === matchedCharacter);
 
-                abilityToRun.Special();
-                  
-                console.log(oGameData.gameField);
-                
+                if(!onFirstFlipCheck) {
+                    console.log(onFirstFlipCheck);
+                    characters.find(card => card.Name === matchedName).Special();
+                }
                 oGameData.cardCompare = [];
                 
             }
@@ -153,7 +157,9 @@ function executeMove (whichCard) {
                 cardFlipCounter.textContent = oGameData.cardFlipsLeft;
                 oGameData.playerMove = 1;
 
-                
+                if(onFirstFlipCheck) {
+                    characters.find(card => card.Name === oGameData.gameField[whichCard]).Special();
+                }
                 setTimeout(() => {
                     document.querySelector(`#card${oGameData.cardCompare[0]}`).classList.remove(`d-none`);
                     document.querySelector(`#card${oGameData.cardCompare[0]}`).nextElementSibling.classList.add(`d-none`)
