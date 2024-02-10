@@ -15,6 +15,9 @@ let characters = [
                          if (oGameData.gameField[i] === `Peach`) {
                              peachPositions.push(i);
                          }
+                         if (peachPositions.length === 2) {
+                            break;
+                         }
                      }
                      document.querySelector(`#card${peachPositions[0]}`).classList.add(`peach`)
                      document.querySelector(`#card${peachPositions[1]}`).classList.add(`peach`)
@@ -48,35 +51,43 @@ let characters = [
         Special: function () { 
             // Om du matchar Yoshi så äter han upp ett par. (Dvs han matchar 2 kort åt dig.)
             let cardToEat = ``;
+            let yoshiEats = false;
+
             for (let i = 0; i < oGameData.gameField.length; i++) {
-                if (oGameData.gameField[i] !== `Yoshi` && oGameData.gameField[i] !== `Birdo` && oGameData.gameField[i] !== undefined){
+                if (oGameData.gameField[i] !== `Yoshi` && oGameData.gameField[i] !== `Birdo` && oGameData.gameField[i] !== null){
                     cardToEat = oGameData.gameField[i];
+                    yoshiEats = true;
                     break;
                 }
             }
+            if (yoshiEats === true) {
+                let eatThis = [];
 
-            let eatThis = [];
-
-            for (let i = 0; i < oGameData.gameField.length; i++){
-                if (oGameData.gameField[i] === cardToEat) {
-                    eatThis.push(i);
+                for (let i = 0; i < oGameData.gameField.length; i++){
+                    if (oGameData.gameField[i] === cardToEat) {
+                        eatThis.push(i);
+                    }
                 }
+
+                let firstCard = document.querySelector(`#card${eatThis[0]}`);
+                firstCard.classList.add(`d-none`);
+                firstCard.nextElementSibling.style.boxShadow  = ``;
+                firstCard.nextElementSibling.classList.remove(`d-none`);
+                firstCard.nextElementSibling.classList.add(`matched`);
+
+
+                let secondCard = document.querySelector(`#card${eatThis[1]}`);
+                secondCard.classList.add(`d-none`);
+                secondCard.nextElementSibling.style.boxShadow  = ``;
+                secondCard.nextElementSibling.classList.remove(`d-none`);
+                setTimeout(() => {
+                    secondCard.nextElementSibling.classList.add(`matched`);
+                },50);
+                oGameData.gameField[eatThis[0]] = null;
+                oGameData.gameField[eatThis[1]] = null;
+                yoshiEats = false;
             }
-
-            let firstCard = document.querySelector(`#card${eatThis[0]}`);
-            firstCard.classList.add(`d-none`);
-            firstCard.nextElementSibling.classList.remove(`d-none`);
-            firstCard.nextElementSibling.classList.add(`matched`);
-
-
-            let secondCard = document.querySelector(`#card${eatThis[1]}`);
-            secondCard.classList.add(`d-none`);
-            secondCard.nextElementSibling.classList.remove(`d-none`);
-            setTimeout(() => {
-                secondCard.nextElementSibling.classList.add(`matched`);
-            },50);
-            delete oGameData.gameField[eatThis[0]];
-            delete oGameData.gameField[eatThis[1]];
+            console.log(`Yoshi ate ${cardToEat}`);
         }
     },
     {
@@ -84,9 +95,48 @@ let characters = [
         Age : '55',
         Occupation : 'King of Koopas',
         Image : 'https://upload.wikimedia.org/wikipedia/en/9/92/Bowser_Stock_Art_2021.png',
-        Description : `Bowser, the menacing King of Koopas, serves as Mario's perpetual adversary. With a fiery breath and a desire for conquest, he kidnaps Princess Peach in his quest to dominate the Mushroom Kingdom, providing a formidable challenge for Mario.`,
+        Description : `Bowser, the menacing King of Koopas, serves as Mario's perpetual adversary. Will kidnap Peach if given a chance!`,
         Color: `#fec162`,
-        Special: function () { console.log(`Du hittade ${characters[4].Name}!`);}
+        Special: function () { 
+        // Om Peach är matchad så gömmer Bowser henne igen.
+        let peachKidnap = oGameData.gameField.find(peach => peach === `Peach`);
+        let cardsToMove = []; 
+   
+        if (!peachKidnap) {
+            for (let i = 0; i < oGameData.gameField.length; i++) {
+                if (oGameData.gameField[i] !== null) {
+                cardsToMove.push(i)
+
+                }
+            }
+        }
+
+        let originalPositions = cardsToMove.map(index => index + 1);
+
+        if (!peachKidnap){
+            for (let i = 0; i<oGameData.memoryArray.length; i++){
+                if (oGameData.memoryArray[i].Name === `Peach`){
+
+                    oGameData.gameField[i] = `Peach`;
+
+                    let memoryContainer = document.querySelector(`#contentContainer`)
+                    let peachCard = document.querySelector(`#card${i}`)
+                    let peachContainer = document.querySelector(`#cardContainer${i}`);
+                    let cardToMovePlusOne = document.querySelector(`#cardContainer${originalPositions[i]}`);
+                    peachCard.classList.remove(`d-none`);
+                    peachCard.nextElementSibling.classList.remove(`matched`)
+                    peachCard.nextElementSibling.classList.add(`d-none`)
+                    let randomCardIndex = Math.floor(Math.random()*cardsToMove.length);
+                    let randomCard = document.querySelector(`#cardContainer${cardsToMove[randomCardIndex]}`)
+                    memoryContainer.insertBefore(peachContainer, randomCard);
+                    memoryContainer.insertBefore(randomCard, cardToMovePlusOne);
+                }
+            }
+        }
+        else {
+            console.log(`Peach isn't matched!`)
+        }
+        }
     }, 
     {
         Name : 'Toad',
@@ -123,10 +173,55 @@ let characters = [
         Description : 'Will shuffle the board once matched.',
         Color: `rgb(146 88 228)`,
         Special: function () {
-            console.log(`Du hittade ${characters[7].Name}!`)
+            // Blandar om brädet när han matchas.
+            let cardsToMove = []; 
+   
+            for (let i = 0; i < oGameData.gameField.length; i++) {
+                if (oGameData.gameField[i] !== null) {
+                    cardsToMove.push(i)
 
+                }
+            }
+
+            let originalPositions = cardsToMove.map(index => index + 1);
+
+            for (let j = 0; j < cardsToMove.length; j++) {
+    
+                let cardToMove = document.querySelector(`#cardContainer${cardsToMove[j]}`);
+                let cardToMovePlusOne = document.querySelector(`#cardContainer${originalPositions[j]}`);
+                let randomCardIndex = Math.floor(Math.random()*cardsToMove.length);
+                let randomCard = document.querySelector(`#cardContainer${cardsToMove[randomCardIndex]}`);
+                let memoryContainer = document.querySelector(`#contentContainer`);
+                                // Exempel:   flytta 0   släpp före 7
+                memoryContainer.insertBefore(cardToMove, randomCard);
+                                // Exempel:   flytta 7   släpp före 1
+                memoryContainer.insertBefore(randomCard, cardToMovePlusOne);
+            }
+            // const container = document.querySelector('#contentContainer'); // Replace with your container ID
+            // const numbers = [];
+
+            // for (const card of container.querySelectorAll('.cardContainer')) {
+            //      const match = card.id.match(/\d+/); // Extract the number using regular expression
+            //      if (match) {
+            //      numbers.push(parseInt(match[0])); // Convert the string to integer
+            //      }
+            // }
+            // let newGameField = [];
+            // for (let g = 0; g<oGameData.memoryArray.length; g++){
+            //     if (!oGameData.gameField.includes(oGameData.memoryArray[numbers[g]].Name)){
+            //         newGameField.push(null)
+            //     } else{
+            //         newGameField.push(oGameData.memoryArray[numbers[g]].Name);
+            //     }
+
+            // }
+            // console.log(`oGameData.gameField efter Waluigi: ${oGameData.gameField}`);
+            // oGameData.gameField = newGameField;
         }
-    },    
+
+
+    }
+    ,    
     {
         Name : 'Daisy',
         Age : '23',
@@ -155,3 +250,6 @@ let characters = [
 
     
 ];
+
+// let abilityToRun = characters.find(card => card.Name === `Waluigi`);
+// abilityToRun.Special();
