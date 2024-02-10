@@ -1,7 +1,7 @@
 let oGameData = {};
 
 function initGlobalObject () {
-    oGameData.debug = true;
+    oGameData.debug = false;
 
     oGameData.memoryArray = [];
 

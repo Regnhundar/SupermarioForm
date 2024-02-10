@@ -7,7 +7,7 @@ let characters = [
         Description : 'Mario, the legendary plumber in red, is the beloved hero of the Mushroom Kingdom. Renowned for his bravery and iconic mustache, he embarks on epic adventures, facing challenges to rescue Princess Peach from the villainous Bowser.',
         Color: `#ed0d11`,
         Special: function () {
-            // Om peach inte är matchad så får peach korten klassen peach (för CSS styling. Just nu växer korten något)
+            // Om peach inte är matchad så får peach klassen .peach (för CSS styling. Just nu växer korten något)
             let peachFinder = oGameData.gameField.find(array => array === `Peach`);
                 if (peachFinder) {
                     let peachPositions = [];
@@ -39,7 +39,11 @@ let characters = [
         Image : 'https://upload.wikimedia.org/wikipedia/en/1/16/Princess_Peach_Stock_Art.png',
         Description : `Princess Peach, the regal ruler of the Mushroom Kingdom, radiates kindness and grace. Often the damsel in distress, she remains a symbol of resilience, awaiting rescue from Mario while actively participating in the kingdom's affairs.`,
         Color: `#ff8bb2`,
-        Special: function () { console.log(`Du hittade ${characters[2].Name}!`);}
+        Special: function () { 
+            console.log(`Du hittade ${characters[2].Name}!`);
+
+        document.querySelector(`.point-counter`).textContent = oGameData.cardFlipsLeft += 2;;
+        }
     },
     {
         Name : 'Yoshi',
@@ -173,7 +177,7 @@ let characters = [
         Description : 'Will shuffle the board once matched.',
         Color: `rgb(146 88 228)`,
         Special: function () {
-            // Blandar om brädet när han matchas.
+            // Waluigi blandar om brädet när han matchas.
             let cardsToMove = []; 
    
             for (let i = 0; i < oGameData.gameField.length; i++) {
